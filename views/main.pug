@@ -2,7 +2,7 @@ extends layout
 block content
     div.container
         .row
-            .col-md-8.col-xs-12.col-sm-12
+            .col-md-7.col-xs-12.col-sm-12
                 .card
                     .card-header
                         .card-title Lastest Transactions
@@ -16,7 +16,11 @@ block content
                                                 .row(style="padding: 10px; flex-wrap: nowrap")
                                                     .col-md-1.col-sm-1(style="margin-right: 10px")
                                                         .avatar
-                                                            span.avatar-title.rounded-circle.border.border-white.bg-yellow(title=trx.actionName)= trx.actionName.substring(0,1)
+                                                            span.avatar-title.rounded-circle.border.border-white(title=trx.actionName style="background-color: " + trx.bgColor)
+                                                                if trx.icon
+                                                                    i.fa(class=trx.icon)
+                                                                else
+                                                                    small= trx.actionName.substring(0,1)
                                                     .col-md-3.col-sm-3(style="margin-left: 10px")
                                                         div
                                                             a(href="/tx/" + trx.hash title=trx.hash)= trx.hash.substring(0, 8) + '...'
@@ -33,10 +37,31 @@ block content
                                                     .col-md-4.col-sm-4
                                                         div.text-right
                                                             b
-                                                                small.badge.badge-primary= trx.amount + ' JEWEL'
-            .col-md-4
+                                                                small.badge(style="background-color: #FFDCB5; color: #111; font-weight: bold; border: 0px")= trx.amount + ' JEWEL'
+            .col-md-5
                 .card
                     .card-header
-                        .card-title Lastest Taverns
+                        .card-title Lastest Quests
                     .card-body(style="padding: 0px")
                         .table-responsive
+                            table.table.table-bordered.table-striped#table-quests
+                                tbody
+                                    each quest in quests
+                                        tr
+                                            td
+                                                .row(style="padding: 10px; flex-wrap: nowrap")
+                                                    .col-md-5.col-sm-5
+                                                        div
+                                                            if quest.method == 'startQuest'
+                                                                small Start Quest
+                                                            else
+                                                                small Complete Quest
+                                                        div
+                                                            small= quest.timestamp
+                                                    .col-md-4.col-sm-4
+                                                        small
+                                                            a(href="/tx/" + quest.hash title="View Detail")= quest.hash.substring(0, 7) + '...'
+                                                    .col-md-3.col-sm-3
+                                                        div.text-right
+                                                            b
+                                                                small.badge(style="background-color: #FFDCB5; color: #111; font-weight: bold; border: 0px")= quest.questName
