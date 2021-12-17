@@ -1,0 +1,57 @@
+extends layout
+block add_css
+    style.
+        #table-txn {
+            display:block;
+            height : 400px;
+        }
+        
+        #table-txn thead, #table-txn tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;/* even columns width , fix width of table too*/
+        }
+
+        #table-txn tbody {
+            height: 100%;
+            display: block;
+            overflow: auto;
+        }
+block content
+    div.container-fluid
+        .row
+            .col-md-8.col-xs-12.col-sm-12
+                .card
+                    .card-header
+                        .card-title Last Transactions
+                    .card-body(style="padding: 0px")
+                        .table-responsive
+                            table.table.table-bordered.table-striped#table-txn
+                                tbody
+                                    each trx in lastTrx
+                                        tr
+                                            td
+                                                .row(style="padding: 10px; flex-wrap: nowrap")
+                                                    .col-md-1.col-sm-1(style="margin-right: 10px")
+                                                        .avatar
+                                                            span.avatar-title.rounded-circle.border.border-white.bg-yellow(title=trx.actionName)= trx.actionName.substring(0,1)
+                                                    .col-md-3.col-sm-3(style="margin-left: 10px")
+                                                        div
+                                                            a(href="/tx/" + trx.hash title=trx.hash)= trx.hash.substring(0, 8) + '...'
+                                                        small= trx.timestamp
+                                                    .col-md-4.col-sm-4
+                                                        div
+                                                            span From 
+                                                            span
+                                                                a(href="#" title="Profile")= trx.from.substring(0,10) + '...'
+                                                        div
+                                                            span To 
+                                                            span
+                                                                a(href="#" title="Profile")= trx.to.substring(0,10) + '...'
+                                                    .col-md-4.col-sm-4
+                                                        div.text-right
+                                                            b
+                                                                small.badge.badge-primary= trx.amount + ' JEWEL'
+                    .card-footer
+                        div.row
+                            a(href = "#").btn.btn-sm.btn-info.col-lg-12 View All Transaction
