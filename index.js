@@ -27,7 +27,8 @@ mongoose
     if (process.env.NODE_ENV=='miner') {
       let miner = require('./miners/swap')
 
-      setInterval(miner, (60 * 1000))
+      miner.sync()
+      setInterval(miner.sync, (60 * 1000))
     }
   }).catch((e) => {
     console.error(e)
