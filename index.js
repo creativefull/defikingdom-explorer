@@ -1,3 +1,4 @@
+require('dotenv').config()
 const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
@@ -14,9 +15,10 @@ mongoose
     }
   )
   .then(db => {
-    // app.use(express.static(__dirname + '/statics/assets'))
-    // app.set('views', __dirname + '/views')
-    // app.set('view engine', 'pug')
+    app.use('/template', express.static(__dirname + '/statics/template'))
+    app.use(express.static(__dirname + '/statics/assets'))
+    app.set('views', __dirname + '/views')
+    app.set('view engine', 'pug')
 
     app.use(require('./routers'))
     app.use('/api', require('./routers/api'))
