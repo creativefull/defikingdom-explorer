@@ -16,10 +16,17 @@ html(lang="en")
             });
         link(rel="stylesheet", href="/css/bootstrap.min.css")
         link(rel="stylesheet", href="/css/atlantis2.css")
-        link(rel="stylesheet", href="/css/demo.css")    
+        link(rel="stylesheet", href="/css/demo.css")
+        style.
+            .main-header .nav-bottom .page-navigation.page-navigation-info > .nav-item > .nav-link .link-icon {
+                color: #0EAC51
+            }
+            a {
+                color: #E67E22
+            }
     body
         div.wrapper.horizontal-layout-2
-            .main-header(style="background-color: #F39C12")
+            .main-header(style="background: rgba(16, 15, 33, 0.85)")
                 .nav-top
                     .container.d-flex.flex-row
                         button.navbar-toggler.sidenav-toggler.ml-auto(type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle Navigation")
@@ -27,8 +34,8 @@ html(lang="en")
                                 i.icon-menu
                         button.topbar-toggler.more
                             i.icon-options-vertical
-                        a(href="/").logo.d-flex.align-items-center
-                            img(src="https://via.placeholder.com/100x35" alt="navbar brand" class="navbar-brand")
+                        a(href="/").logo.d-flex.align-items-center.mb-2
+                            img(src="https://defikingdoms.com/img/defi-kingdoms-logo.png" alt="navbar brand" class="navbar-brand" width="180px")
                 .nav-bottom
                     .container
                         h3.title-menu.d-flex.d-lg-none Menu
@@ -59,4 +66,5 @@ html(lang="en")
         script(src="/js/core/jquery.3.2.1.min.js")
         script(src="/js/core/popper.min.js")
         script(src="/js/core/bootstrap.min.js")
+        script(src="/js/currency.js")
         block script

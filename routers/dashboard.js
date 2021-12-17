@@ -6,6 +6,8 @@ const _ = require('underscore')
 const {abis} = require('../miners/abis')
 let abiQuest = require('../abi/quest.json')
 const InputDataDecoder = require('ethereum-input-data-decoder');
+const CoinGecko = require('coingecko-api')
+const CoinGeckoClient = new CoinGecko();
 
 function Dashboard() {
     this.index = async (req,res,next) => {
@@ -53,6 +55,11 @@ function Dashboard() {
             lastTrx: outputs,
             quests: questOutput
         })
+    }
+
+    this.jewelStats = async (req,res,next) => {
+        let data = await CoinGeckoClient.coins.fetchMarketChart('defi-kingdoms', {})
+        return res.json(data)
     }
 }
 module.exports = exports = Dashboard
