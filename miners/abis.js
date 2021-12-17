@@ -19,7 +19,7 @@ exports.abis = [{
 }, {
     'type': 'AUCTION',
     'address': '0x13a65b9f8039e2c032bc022171dc05b30c3f2892',
-    'abi': require('../abi/herosale.json'),
+    'abi': require('../abi/saleAuction.json'),
     'icon': 'icon-basket-loaded',
     'color': '#ACBAC9'
 }]
