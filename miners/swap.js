@@ -114,19 +114,23 @@ async function callback(err, data) {
 }
 
 async function run() {
-    const latestBlock = await web3.eth.getBlockNumber()
-    let startBlock = latestBlock - parseInt(earlyBlock)
-
-    console.log('Running Mining Transaction Swap')
-    console.log('Start Block', startBlock)
-    console.log('Latest Block', latestBlock)
-
-    const batch = new web3.eth.BatchRequest()
-    for(let i=startBlock; i<=latestBlock; i++) {
-        batch.add(web3.eth.getBlock.request(i, callback))
+    try {
+        const latestBlock = await web3.eth.getBlockNumber()
+        let startBlock = latestBlock - parseInt(earlyBlock)
+    
+        console.log('Running Mining Transaction Swap')
+        console.log('Start Block', startBlock)
+        console.log('Latest Block', latestBlock)
+        
+        const batch = new web3.eth.BatchRequest()
+        for(let i=startBlock; i<=latestBlock; i++) {
+            batch.add(web3.eth.getBlock.request(i, callback))
+        }
+    
+        batch.execute()
+    } catch (e) {
+        console.error('ERROR', e)
     }
-
-    batch.execute()
 }
 
 module.exports = exports = {
