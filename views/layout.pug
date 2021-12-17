@@ -1,0 +1,59 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Defi Kingdoms - Report All History
+        script(src="/js/plugin/webfont/webfont.min.js")
+        script.
+            WebFont.load({
+                google: {"families":["Lato:300,400,700,900"]},
+                custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['/css/fonts.min.css']},
+                active: function() {
+                    sessionStorage.fonts = true;
+                }
+            });
+        link(rel="stylesheet", href="/css/bootstrap.min.css")
+        link(rel="stylesheet", href="/css/atlantis2.css")
+        link(rel="stylesheet", href="/css/demo.css")    
+    body
+        div.wrapper.horizontal-layout-2
+            .main-header(data-background-color="light-blue2")
+                .nav-top
+                    .container.d-flex.flex-row
+                        button.navbar-toggler.sidenav-toggler.ml-auto(type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle Navigation")
+                            span.navbar-toggler-icon
+                                i.icon-menu
+                        button.topbar-toggler.more
+                            i.icon-options-vertical
+                        a(href="/").logo.d-flex.align-items-center
+                            img(src="https://via.placeholder.com/100x35" alt="navbar brand" class="navbar-brand")
+                .nav-bottom
+                    .container
+                        h3.title-menu.d-flex.d-lg-none Menu
+                            .close-menu
+                                i.flaticon-cross
+                        ul.nav.page-navigation.page-navigation-info.bg-white
+                            li.nav-item
+                                a.nav-link(href="#" title="Home")
+                                    i.link-icon.icon-screen-desktop
+                                    span.menu-title Monitoring
+                            li.nav-item
+                                a.nav-link(href="#" title="Heroes")
+                                    i.link-icon.fas.fa-user-astronaut
+                                    span.menu-title Heroes
+                            li.nav-item
+                                a.nav-link(href="#" title="Hero")
+                                    i.link-icon.fas.fa-chalkboard-teacher
+                                    span.menu-title Quests
+                            li.nav-item
+                                a.nav-link(href="#" title="Home")
+                                    i.link-icon.fas.fa-shopping-bag
+                                    span.menu-title Taverns
+        block content
+
+        script(src="/js/core/jquery.3.2.1.min.js")
+        script(src="/js/core/popper.min.js")
+        script(src="/js/core/bootstrap.min.js")
+        block script
