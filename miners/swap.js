@@ -22,24 +22,27 @@ let parseTokenTransfer = (detail) => {
                 if (log.transactionHash == detail.transactionHash) {
                     const result = web3.utils.toBN(log.data).toString();
                     let contract = new web3.eth.Contract(erc20, log.address)
-                    let name = await contract.methods.name().call()
-                    let symbol = await contract.methods.symbol().call()
-                    let decimal = await contract.methods.decimals().call()
-                    let amount = parseInt(result) / (10 ** parseInt(decimal))
-    
-                    if (log.topics.length > 2) {
-                        let from = log.topics[1]
-                        let to = log.topics[2]
-                        to = '0x' + to.substring(26, to.length)
-                        from = '0x' + from.substring(26, from.length)
-    
-                        return {
-                            amount: amount,
-                            to: to,
-                            from: from,
-                            name: name,
-                            symbol: symbol,
-                            decimal: decimal
+                    let supply = await contract.methods.totalSupply().call()
+                    if (supply > 0) {
+                        let name = await contract.methods.name().call()
+                        let symbol = await contract.methods.symbol().call()
+                        let decimal = await contract.methods.decimals().call()
+                        let amount = parseInt(result) / (10 ** parseInt(decimal))
+        
+                        if (log.topics.length > 2) {
+                            let from = log.topics[1]
+                            let to = log.topics[2]
+                            to = '0x' + to.substring(26, to.length)
+                            from = '0x' + from.substring(26, from.length)
+        
+                            return {
+                                amount: amount,
+                                to: to,
+                                from: from,
+                                name: name,
+                                symbol: symbol,
+                                decimal: decimal
+                            }
                         }
                     }
                 }
@@ -58,7 +61,7 @@ let parseTrx = (hash) => {
     return new Promise(async (resolve, reject) => {
         let detail = await web3.eth.getTransactionReceipt(hash)
         let trxDetail = await web3.eth.getTransaction(hash)
-    
+
         if (detail) {
             let trxData = await Promise.all(
                 abis.abis.map(async (abi, index) => {
