@@ -44,12 +44,18 @@ block content
                             .col-md-3
                                 small From : 
                             .col-md-9.txn-value
-                                small= data.from
+                                small
+                                    a(href="javascript:void(0)" title=data.from)= data.from
+                                if (data.fromTag)
+                                    small= ' ( ' + data.fromTag + ' )'
                         .row.p-3.txn-row
                             .col-md-3
                                 small To : 
                             .col-md-9.txn-value
-                                small= data.to
+                                small
+                                    a(href="javscript:void(0)" title=data.to)= data.to
+                                if (data.toTag)
+                                    small= ' ( ' + data.toTag + ' )'
 
                         if (data.tokenTransfers.length > 0)
                             .row.p-3.txn-row

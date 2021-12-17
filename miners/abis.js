@@ -14,6 +14,12 @@ exports.abis = [{
     'type': 'QUEST',
     'address': '0x5100bd31b822371108a0f63dcfb6594b9919eaf4',
     'abi': require('../abi/quest.json'),
-    'icon': 'fa-bolt',
+    'icon': 'icon-drop',
     'color': '#FFA27B'
+}, {
+    'type': 'TAVERN',
+    'address': '0x13a65b9f8039e2c032bc022171dc05b30c3f2892',
+    'abi': require('../abi/herosale.json'),
+    'icon': 'icon-basket-loaded',
+    'color': '#ACBAC9'
 }]
