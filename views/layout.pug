@@ -1,5 +1,5 @@
 doctype html
-html(lang="en")
+html()
     head
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
@@ -16,7 +16,7 @@ html(lang="en")
             });
         link(rel="stylesheet", href="/css/bootstrap.min.css")
         link(rel="stylesheet", href="/css/atlantis2.css")
-        link(rel="stylesheet", href="/css/demo.css")    
+        link(rel="stylesheet", href="/css/demo.css")
         block add_css
     body
         div.wrapper.horizontal-layout-2
@@ -58,10 +58,23 @@ html(lang="en")
                                     span.menu-title Taverns
             
             .main-panel
-                .container
-                    block content
+                //- .container
+                block content
 
-        script(src="/js/core/jquery.3.2.1.min.js")
+        //- script(src="/js/core/jquery.3.2.1.min.js")
+        script(src = "/js/libs/jquery-2.1.1.min.js")
         script(src="/js/core/popper.min.js")
         script(src="/js/core/bootstrap.min.js")
-        block script
+        //- script(src="/js/plugin/datatables/datatables.min.js")
+
+        //- <!-- Data Tables -->
+        script(src="/bower_components/datatables.net/js/jquery.dataTables.min.js")
+        script(src='/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')
+        script(src='/bower_components/datatables.net-buttons/js/buttons.print.min.js')
+        script(src='/bower_components/datatables.net-buttons/js/buttons.html5.min.js')
+        script(src="/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js")
+        script(src="/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js")
+        script(src="/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js")
+
+        script(src="/js/app.js")
+        block add_script

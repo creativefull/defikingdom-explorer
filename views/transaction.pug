@@ -1,0 +1,29 @@
+extends layout	
+block content
+	div.container
+		.row
+			.col-md-12.col-xs-12.col-sm-12
+				.card
+					.card-header
+						.card-title Transactions
+					.card-body(style="padding: 0px")
+						.table-responsive
+							table.table.table-bordered.table-striped#tableTxn
+								thead
+									tr
+										th Txn Hash
+										th Method
+										th Block
+										th Age
+										th From
+										th To
+										th Value
+										th Txn Fee
+								tbody
+
+block add_script
+	script.
+		var tableTxn;
+		$(function (){
+			fetchDataTable(`#tableTxn`,`/trx/dataTable`);
+		});
