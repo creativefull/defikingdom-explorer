@@ -17,7 +17,7 @@ exports.abis = [{
     'icon': 'icon-drop',
     'color': '#FFA27B'
 }, {
-    'type': 'TAVERN',
+    'type': 'AUCTION',
     'address': '0x13a65b9f8039e2c032bc022171dc05b30c3f2892',
     'abi': require('../abi/herosale.json'),
     'icon': 'icon-basket-loaded',
