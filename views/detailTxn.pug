@@ -1,0 +1,105 @@
+extends layout
+block style
+    style.
+        .txn-row {
+            border-bottom: 1px solid#EEE;
+        }
+        .txn-body {
+            margin: 0px;
+        }
+        .hash-tag {
+            max-width: 171px;
+            display: inline-block;
+            vertical-align: bottom;
+        }
+block content
+    .container
+        .row
+            .col-md-12
+                .card
+                    .card-header
+                        .card-title Transaction Detail
+                    .card-body.txn-body
+                        .row.p-3.txn-row
+                            .col-md-3
+                                small Transaction Hash : 
+                            .col-md-9.txn-value
+                                small= data.hash
+                        .row.p-3.txn-row
+                            .col-md-3.col-sm-3
+                                small Status : 
+                            .col-md-9.col-sm-9.txn-value
+                                small.badge(class=data.success ? 'badge-success' : 'badge-danger')= data.success ? 'Success' : 'Failed'
+                        .row.p-3.txn-row
+                            .col-md-3
+                                small Block : 
+                            .col-md-9.txn-value
+                                small= data.blockNumber
+                        .row.p-3.txn-row
+                            .col-md-3
+                                small Timestamp : 
+                            .col-md-9.txn-value
+                                small= data.timestamp
+                        .row.p-3.txn-row
+                            .col-md-3
+                                small From : 
+                            .col-md-9.txn-value
+                                small= data.from
+                        .row.p-3.txn-row
+                            .col-md-3
+                                small To : 
+                            .col-md-9.txn-value
+                                small= data.to
+
+                        if (data.tokenTransfers.length > 0)
+                            .row.p-3.txn-row
+                                .col-md-3
+                                    small Token Transfers : 
+                                .col-md-9.txn-value
+                                    ul.list-unstyled.mb-0
+                                        each value in data.tokenTransfers
+                                            li.media.align-items-baseline.mb-2
+                                                span.row-count.text-secondary.small.mr-1
+                                                    i.fa.fa-caret-right
+                                                .media-body
+                                                    small
+                                                        b From 
+                                                    small.hash-tag.text-truncate.mr-1
+                                                        a(href="javascript:void(0)" title=value.from)= value.from
+                                                    small.mr-1
+                                                    small
+                                                        b To 
+                                                    small.hash-tag.text-truncate.mr-1
+                                                        a(href="javascript:void(0)" title=value.to)= value.to
+                                                    small.mr-1
+                                                    small
+                                                        b For 
+                                                    small.mr-1= value.amount 
+                                                    small.hash-tag.text-truncate.mr-1
+                                                        a(href="javascript:void(0)" title=value.symbol)= value.name + '(' + value.symbol + ')'
+
+                        .row.p-3.txn-row
+                            .col-md-3
+                                small Action Name : 
+                            .col-md-9.txn-value
+                                small= data.actionName
+                        .row.p-3.txn-row
+                            .col-md-3
+                                small Action Method : 
+                            .col-md-9.txn-value
+                                small= data.method
+                        .row.p-3.txn-row
+                            .col-md-3
+                                small Transaction Fee : 
+                            .col-md-9.txn-value
+                                small= data.fee + ' ONE'
+                        .row.p-3.txn-row
+                            .col-md-3
+                                small Gas Usage : 
+                            .col-md-9.txn-value
+                                small= data.gas
+                        .row.p-3.txn-row
+                            .col-md-3
+                                small Nonce : 
+                            .col-md-9.txn-value
+                                small= data.nonce
