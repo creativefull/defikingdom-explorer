@@ -18,13 +18,17 @@ function Txn() {
             data = trxData.filter((t) => t != null)
             if (data.length > 0) {
                 data = data[0]
+            } else {
+                return res.render('detailTxn', {
+                    title: 'Defi Kingdoms Transaction Hash (Txhash) Detail',
+                    data: null
+                })
             }
         }
 
         if (data) {
             data.fee = (data.gas * parseInt(data.gasPrice)) / 10 ** 18;
             /* CHECK ADDRESS FROM / TO */
-
             let checkFrom = _.findWhere(abis, {address: data.from.toLowerCase()})
             let checkTo = _.findWhere(abis, {address: data.to.toLowerCase()})
 

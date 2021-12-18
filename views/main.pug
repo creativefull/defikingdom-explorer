@@ -101,7 +101,7 @@ block script
                 success: (data) => {
                     console.log(data)
                     if (data.code == 200) {
-                        let lastPrice = parseFloat(data.data.prices[0][1]).toFixed(2)
+                        let lastPrice = parseFloat(data.data.prices[data.data.prices.length-1][1]).toFixed(2)
                         let lastVolumes = parseFloat(data.data.total_volumes[0][1]).toFixed(2)
                         let lastCap = parseFloat(data.data.market_caps[0][1]).toFixed(2)
                         $("#jewel-price").text(`$ ${lastPrice}`)
