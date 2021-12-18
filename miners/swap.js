@@ -22,24 +22,27 @@ let parseTokenTransfer = (detail) => {
                 if (log.transactionHash == detail.transactionHash) {
                     const result = web3.utils.toBN(log.data).toString();
                     let contract = new web3.eth.Contract(erc20, log.address)
-                    let name = await contract.methods.name().call()
-                    let symbol = await contract.methods.symbol().call()
-                    let decimal = await contract.methods.decimals().call()
-                    let amount = parseInt(result) / (10 ** parseInt(decimal))
-    
-                    if (log.topics.length > 2) {
-                        let from = log.topics[1]
-                        let to = log.topics[2]
-                        to = '0x' + to.substring(26, to.length)
-                        from = '0x' + from.substring(26, from.length)
-    
-                        return {
-                            amount: amount,
-                            to: to,
-                            from: from,
-                            name: name,
-                            symbol: symbol,
-                            decimal: decimal
+                    let supply = await contract.methods.totalSupply().call()
+                    if (supply > 0) {
+                        let name = await contract.methods.name().call()
+                        let symbol = await contract.methods.symbol().call()
+                        let decimal = await contract.methods.decimals().call()
+                        let amount = parseInt(result) / (10 ** parseInt(decimal))
+        
+                        if (log.topics.length > 2) {
+                            let from = log.topics[1]
+                            let to = log.topics[2]
+                            to = '0x' + to.substring(26, to.length)
+                            from = '0x' + from.substring(26, from.length)
+        
+                            return {
+                                amount: amount,
+                                to: to,
+                                from: from,
+                                name: name,
+                                symbol: symbol,
+                                decimal: decimal
+                            }
                         }
                     }
                 }
@@ -58,11 +61,11 @@ let parseTrx = (hash) => {
     return new Promise(async (resolve, reject) => {
         let detail = await web3.eth.getTransactionReceipt(hash)
         let trxDetail = await web3.eth.getTransaction(hash)
-    
+
         if (detail) {
             let trxData = await Promise.all(
                 abis.abis.map(async (abi, index) => {
-                    if ((detail.to.toLowerCase() == abi.address) || (detail.from.toLowerCase() == abi.address)) {
+                    if ((detail.to.toLowerCase() == abi.address) || (detail.from?.toLowerCase() == abi.address)) {
                         let d = await parseTokenTransfer(detail)
                         let blockDetail = await web3.eth.getBlock(detail.blockNumber)
         
@@ -97,7 +100,7 @@ let parseTrx = (hash) => {
                     }
                 })
             )
-
+            
             return resolve(trxData)
         } else {
             return resolve(null)
@@ -114,19 +117,23 @@ async function callback(err, data) {
 }
 
 async function run() {
-    const latestBlock = await web3.eth.getBlockNumber()
-    let startBlock = latestBlock - parseInt(earlyBlock)
-
-    console.log('Running Mining Transaction Swap')
-    console.log('Start Block', startBlock)
-    console.log('Latest Block', latestBlock)
-
-    const batch = new web3.eth.BatchRequest()
-    for(let i=startBlock; i<=latestBlock; i++) {
-        batch.add(web3.eth.getBlock.request(i, callback))
+    try {
+        const latestBlock = await web3.eth.getBlockNumber()
+        let startBlock = latestBlock - parseInt(earlyBlock)
+    
+        console.log('Running Mining Transaction Swap')
+        console.log('Start Block', startBlock)
+        console.log('Latest Block', latestBlock)
+        
+        const batch = new web3.eth.BatchRequest()
+        for(let i=startBlock; i<=latestBlock; i++) {
+            batch.add(web3.eth.getBlock.request(i, callback))
+        }
+    
+        batch.execute()
+    } catch (e) {
+        console.error('ERROR', e)
     }
-
-    batch.execute()
 }
 
 module.exports = exports = {

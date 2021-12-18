@@ -1,0 +1,35 @@
+extends layout
+block content
+    .container
+        .row
+            .col-md-12
+                .card
+                    .card-header
+                        .card-title List Token Defi Kingdoms
+                    .card-body(style="padding: 0px")
+                        .table-responsive
+                            table.table.table-striped.table-bordered
+                                tbody
+                                    each d in data
+                                        tr
+                                            td
+                                                .row.mb-2
+                                                    .col-md-1.col-sm-1.pt-2
+                                                        .avatar
+                                                            span.avatar-title.rounded-circle(style="background-color: transparent;")
+                                                                img(src=d.logoURI, alt=d.symbol width="32px")
+                                                    .col-md-2.col-sm-2.pt-2
+                                                        div
+                                                            span= d.name
+                                                        div
+                                                            span.text-muted= d.symbol
+                                                    .col-md-5.col-sm-5.pt-2
+                                                        div
+                                                            small
+                                                                a(href="#")= d.address 
+                                                    .col-md-2.col-sm-2.pt-2.text-right
+                                                        div
+                                                            b= parseFloat(d.jewelPrice).toFixed(2) + ' Jewel'
+                                                    .col-md-2.col-sm-2.pt-2.text-right
+                                                        div
+                                                            b= '$ ' + d.usdPrice

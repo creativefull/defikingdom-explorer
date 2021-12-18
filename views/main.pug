@@ -1,29 +1,36 @@
 extends layout
-block add_css
-    style.
-        #table-txn {
-            display:block;
-            height : 400px;
-        }
-        
-        #table-txn thead, #table-txn tbody tr {
-            display: table;
-            width: 100%;
-            table-layout: fixed;/* even columns width , fix width of table too*/
-        }
-
-        #table-txn tbody {
-            height: 100%;
-            display: block;
-            overflow: auto;
-        }
 block content
     div.container
         .row
-            .col-md-8.col-xs-12.col-sm-12
+            .col-md-4
+                .card.p-3
+                    .d-flex.align-items-center
+                        span.stamp.stamp-md.bg-default.mr-3(style="background-color:#FFF")
+                            img(src="https://assets.coingecko.com/coins/images/18570/small/fAisLIV.png?1632449282", alt="Icon Jewel" width="32")
+                        div
+                            h5.mb-1(style="margin-bottom: 0px") Jewel Price
+                            b#jewel-price.text-muted Loading...
+            .col-md-4
+                .card.p-3
+                    .d-flex.align-items-center
+                        span.stamp.stamp-md.bg-default.mr-3(style="background-color:#FFF")
+                            i.icon-chart.text-warning
+                        div
+                            h5.mb-1(style="margin-bottom: 0px") Transactions Volume
+                            b#jewel-volume.text-muted Loading...
+            .col-md-4
+                .card.p-3
+                    .d-flex.align-items-center
+                        span.stamp.stamp-md.bg-default.mr-3(style="background-color:#FFF")
+                            i.icon-chart.text-warning
+                        div
+                            h5.mb-1(style="margin-bottom: 0px") Market Cap
+                            b#jewel-cap.text-muted Loading...
+        .row
+            .col-md-7.col-xs-12.col-sm-12
                 .card
                     .card-header
-                        .card-title Last Transactions
+                        .card-title Lastest Transactions
                     .card-body(style="padding: 0px")
                         .table-responsive
                             table.table.table-bordered.table-striped#table-txn
@@ -32,9 +39,13 @@ block content
                                         tr
                                             td
                                                 .row(style="padding: 10px; flex-wrap: nowrap")
-                                                    .col-md-1.col-sm-1(style="margin-right: 10px")
+                                                    .col-md-1.col-sm-1(style="margin-right: 10px; padding-left: 0px")
                                                         .avatar
-                                                            span.avatar-title.rounded-circle.border.border-white.bg-yellow(title=trx.actionName)= trx.actionName.substring(0,1)
+                                                            span.avatar-title.rounded-circle.border.border-white(title=trx.actionName style="background-color: " + trx.bgColor)
+                                                                if trx.icon
+                                                                    i.fa(class=trx.icon)
+                                                                else
+                                                                    small= trx.actionName.substring(0,1)
                                                     .col-md-3.col-sm-3(style="margin-left: 10px")
                                                         div
                                                             a(href="/tx/" + trx.hash title=trx.hash)= trx.hash.substring(0, 8) + '...'
@@ -51,7 +62,52 @@ block content
                                                     .col-md-4.col-sm-4
                                                         div.text-right
                                                             b
-                                                                small.badge.badge-primary= trx.amount + ' JEWEL'
-                    .card-footer
-                        div.row
-                            a(href = "#").btn.btn-sm.btn-info.col-lg-12 View All Transaction
+                                                                small.badge(style="background-color: #FFDCB5; color: #111; font-weight: bold; border: 0px")= trx.amount + ' JEWEL'
+            .col-md-5
+                .card
+                    .card-header
+                        .card-title Lastest Quests
+                    .card-body(style="padding: 0px")
+                        .table-responsive
+                            table.table.table-bordered.table-striped#table-quests
+                                tbody
+                                    each quest in quests
+                                        tr
+                                            td
+                                                .row(style="padding: 10px; flex-wrap: nowrap; padding-left: 0px")
+                                                    .col-md-5.col-sm-5
+                                                        div
+                                                            if quest.method == 'startQuest'
+                                                                small Start Quest
+                                                            else
+                                                                small Complete Quest
+                                                        div
+                                                            small= quest.timestamp
+                                                    .col-md-4.col-sm-4
+                                                        small
+                                                            a(href="/tx/" + quest.hash title="View Detail")= quest.hash.substring(0, 7) + '...'
+                                                    .col-md-3.col-sm-3
+                                                        div.text-right
+                                                            b
+                                                                small.badge(style="background-color: #FFDCB5; color: #111; font-weight: bold; border: 0px")= quest.questName
+
+block script
+    script.
+        $(function() {
+            $.ajax({
+                url: '/jewel-stats',
+                beforeSend: () => {
+                },
+                success: (data) => {
+                    console.log(data)
+                    if (data.code == 200) {
+                        let lastPrice = parseFloat(data.data.prices[0][1]).toFixed(2)
+                        let lastVolumes = parseFloat(data.data.total_volumes[0][1]).toFixed(2)
+                        let lastCap = parseFloat(data.data.market_caps[0][1]).toFixed(2)
+                        $("#jewel-price").text(`$ ${lastPrice}`)
+                        $("#jewel-volume").text(Number(lastVolumes).toLocaleString())
+                        $("#jewel-cap").text(`$ ${Number(lastCap).toLocaleString()}`)
+                    }
+                }
+            })
+        })

@@ -8,7 +8,7 @@ block content
 						.card-title Transactions
 					.card-body(style="padding: 5px")
 						.table-responsive
-							table.table.table-striped.display#tableTxn(width="100%" cellspacing="0")
+							table.table.table-hover.display#tableTxn(width="100%" cellspacing="0")
 								thead
 									tr
 										th Txn Hash
@@ -21,7 +21,7 @@ block content
 										th Txn Fee
 								tbody
 
-block add_script
+block script
 	script.
 		var tableTxn;
 		$(function (){

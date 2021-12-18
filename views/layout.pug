@@ -1,11 +1,10 @@
 doctype html
-html()
+html(lang="en")
     head
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title #{title}
-        //- title Defi Kingdoms - Report All History
+        title Defi Kingdoms - Report All History
         script(src="/js/plugin/webfont/webfont.min.js")
         script.
             WebFont.load({
@@ -18,10 +17,17 @@ html()
         link(rel="stylesheet", href="/css/bootstrap.min.css")
         link(rel="stylesheet", href="/css/atlantis2.css")
         link(rel="stylesheet", href="/css/demo.css")
-        block add_css
+        style.
+            .main-header .nav-bottom .page-navigation.page-navigation-info > .nav-item > .nav-link .link-icon {
+                color: #0EAC51
+            }
+            a {
+                color: #E67E22
+            }
+        block style
     body
         div.wrapper.horizontal-layout-2
-            .main-header(data-background-color="light-blue2")
+            .main-header(style="background: rgba(16, 15, 33, 0.85)")
                 .nav-top
                     .container.d-flex.flex-row
                         button.navbar-toggler.sidenav-toggler.ml-auto(type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle Navigation")
@@ -29,8 +35,8 @@ html()
                                 i.icon-menu
                         button.topbar-toggler.more
                             i.icon-options-vertical
-                        a(href="/").logo.d-flex.align-items-center
-                            img(src="https://via.placeholder.com/100x35" alt="navbar brand" class="navbar-brand")
+                        a(href="/").logo.d-flex.align-items-center.mb-2
+                            img(src="https://defikingdoms.com/img/defi-kingdoms-logo.png" alt="navbar brand" class="navbar-brand" width="180px")
                 .nav-bottom
                     .container
                         h3.title-menu.d-flex.d-lg-none Menu
@@ -38,13 +44,9 @@ html()
                                 i.flaticon-cross
                         ul.nav.page-navigation.page-navigation-info.bg-white
                             li.nav-item
-                                a.nav-link(href="/" title="Home")
+                                a.nav-link(href="#" title="Home")
                                     i.link-icon.icon-screen-desktop
                                     span.menu-title Monitoring
-                            li.nav-item
-                                a.nav-link(href="/trx" title="Transaction")
-                                    i.link-icon.icon-screen-desktop
-                                    span.menu-title Transaction
                             li.nav-item
                                 a.nav-link(href="#" title="Heroes")
                                     i.link-icon.fas.fa-user-astronaut
@@ -60,15 +62,14 @@ html()
             
             .main-panel
                 .container
+                    .container
+                        include search
                     block content
 
-        //- script(src="/js/core/jquery.3.2.1.min.js")
-        script(src = "/js/libs/jquery-2.1.1.min.js")
+        script(src="/js/core/jquery.3.2.1.min.js")
         script(src="/js/core/popper.min.js")
         script(src="/js/core/bootstrap.min.js")
-        script(src="/js/plugin/datatables/datatables.min.js")
-
-        //- <!-- Data Tables -->
+        script(src="/js/currency.js")
         script(src="/bower_components/datatables.net/js/jquery.dataTables.min.js")
         script(src='/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')
         script(src='/bower_components/datatables.net-buttons/js/buttons.print.min.js')
@@ -76,5 +77,4 @@ html()
         script(src="/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js")
         script(src="/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js")
         script(src="/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js")
-
-        block add_script
+        block script

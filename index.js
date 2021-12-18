@@ -25,7 +25,10 @@ mongoose
     app.listen(port, () => console.log('Application Listen on Port', port))
 
     if (process.env.NODE_ENV=='miner') {
-      require('./miners/swap').sync()
+      let miner = require('./miners/swap')
+
+      miner.sync()
+      setInterval(miner.sync, (60 * 1000))
     }
   }).catch((e) => {
     console.error(e)
