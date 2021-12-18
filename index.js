@@ -15,20 +15,23 @@ mongoose
     }
   )
   .then(db => {
-    app.use('/template', express.static(__dirname + '/statics/template'))
-    app.use(express.static(__dirname + '/statics/assets'))
-    app.set('views', __dirname + '/views')
-    app.set('view engine', 'pug')
-
-    app.use(require('./routers'))
-    app.use('/api', require('./routers/api'))
-    app.listen(port, () => console.log('Application Listen on Port', port))
-
     if (process.env.NODE_ENV=='miner') {
       let miner = require('./miners/swap')
-
+      let sync = require('./miners/deleteOldData')
+  
       miner.sync()
+      sync.deleteSync()
       setInterval(miner.sync, (60 * 1000))
+      setInterval(sync.deleteSync, (60 * 1000) * 60)
+    } else {
+      app.use('/template', express.static(__dirname + '/statics/template'))
+      app.use(express.static(__dirname + '/statics/assets'))
+      app.set('views', __dirname + '/views')
+      app.set('view engine', 'pug')
+  
+      app.use(require('./routers'))
+      app.use('/api', require('./routers/api'))
+      app.listen(port, () => console.log('Application Listen on Port', port))  
     }
   }).catch((e) => {
     console.error(e)
