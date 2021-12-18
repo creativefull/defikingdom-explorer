@@ -1,0 +1,67 @@
+extends layout
+block content
+	div.container
+		.row
+			.col-md-12.col-xs-12.col-sm-12
+				.card
+					.card-header
+						.card-title Transactions
+					.card-body(style="padding: 5px")
+						.table-responsive
+							table.table.table-hover.display#tableTxn(width="100%" cellspacing="0")
+								thead
+									tr
+										th Txn Hash
+										th Method
+										th Block
+										th Age
+										th From
+										th To
+										th Value
+										th Txn Fee
+								tbody
+
+block script
+	script.
+		var tableTxn;
+		$(function (){
+			$('.nameMethod').tooltip()
+			tableTxn = $('#tableTxn').removeAttr("width").DataTable({
+				serverSide: true,
+				"pageLength":  50,
+				searching : false,
+				"autoWidth" : true,
+				fixedColumns: true,
+				ajax : '/trx/dataTable',
+				responsive: true,
+				columns : [
+					{
+						"data" : "hash",
+					},{
+						"data" : "method",
+					},{
+						"data" : "blockNumber",
+					},{
+						"data" : "age",
+					},{
+						"data" : "from",
+					},{
+						"data" : "to",
+					},{
+						"data" : "value",
+					},{
+						"data" : "txn_fee",
+					}
+				],
+				columnDefs : [
+					{ width: "20%", targets: 0 },
+					{ width: "8%", targets: 1 },
+					{ width: "10%", targets: 2 },
+					{ width: "15%", targets: 3 },
+					{ width: "20%", targets: 4 },
+					{ width: "20%", targets: 5 },
+					{ width: "3%", targets: 6 },
+					{ width: "5%", targets: 7 },
+				],
+			});
+		});
