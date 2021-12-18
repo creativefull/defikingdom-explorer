@@ -38,10 +38,10 @@ function Transaction () {
 						blockNumber : x.blockNumber,
 						age : timestamp,
 						from : `
-							<a href = '#'>${x.from.substring(0, 10)} ...</a>
+							<a href = '/address/${x.from}'>${x.from.substring(0, 10)} ...</a>
 						`,
 						to : `
-							<a href = '#'>${x.to.substring(0, 10)} ...</a>
+							<a href = '/address/${x.to}'>${x.to.substring(0, 10)} ...</a>
 						`,
 						value : `${x.value} BNB`,
 						txn_fee : txn_fee,

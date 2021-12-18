@@ -1,0 +1,45 @@
+extends layout
+block content
+	div.container
+		div.row
+			div.col-lg-12
+				h5.page-title Address 
+					span(style = 'white-space : normal; color : #77838f!important; font-size : 20px;') #{address}
+		div.row
+			div.col-lg-6
+				.card
+					.card-header
+						.card-title Overview
+					.card-body
+						div(class = 'row align-items-center')
+							div(class = 'col-md-4 mb-1 mb-md-0') Balance:
+							div.col-md-8 0
+								b .
+								| 036461791163288827 BNB
+						hr
+						div(class = 'row align-items-center')
+							div(class = 'col-md-4 mb-1 mb-md-0') BNB Value:
+							div.col-md-8 $19.18 
+								span.small(tyle = 'position:relative;top:-1px') (@ $526.12/BNB)
+						hr
+						div(class = 'row align-items-center')
+							div(class = 'col-md-4 mb-1 mb-md-0') Token:
+							div.col-md-8 $19.18 
+								span.small(tyle = 'position:relative;top:-1px') -
+
+			div.col-lg-6
+				.card
+					.card-header
+						.card-title More Info
+					.card-body
+						div(class = 'row align-items-center')
+							div(class = 'col-md-4 mb-1 mb-md-0') My Name Tag:
+							div.col-md-8 Not Available
+						hr
+		br
+		div.row
+			div.col-lg-12
+				.card
+					.card-header
+						nav(class = 'nav nav-pills nav-secondary')
+					.card-body
