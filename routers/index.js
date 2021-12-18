@@ -7,4 +7,5 @@ const TransactionHandler= require('./Transaction'), Transaction = new Transactio
 app.get('/', Dashboard.index)
 app.get('/heroes', Heroes.index)
 app.get('/trx', Transaction.index);
+app.get('/trx/dataTable', Transaction.dataTable);
 module.exports = exports = app

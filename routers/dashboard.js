@@ -19,7 +19,7 @@ function Dashboard() {
             return trx
         })
         return res.render('main', {
-            title: 'Dashboard',
+            title: 'Defi Kingdoms - Report All History',
             lastTrx: outputs
         })
     }

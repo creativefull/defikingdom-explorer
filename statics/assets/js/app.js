@@ -1,6 +1,8 @@
 function fetchDataTable(selector, options) {
-	tableTxn = dataTable(selector,{
+	tableTxn = $(selector).removeAttr("width").DataTable({
 		"pageLength": options.pageLength || 50,
-		url : options.url
+		searching : options.searching || false,
+		ajax : options.url,
+		responsive: true,
 	});
 }

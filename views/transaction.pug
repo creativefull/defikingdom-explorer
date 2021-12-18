@@ -1,4 +1,4 @@
-extends layout	
+extends layout
 block content
 	div.container
 		.row
@@ -6,9 +6,9 @@ block content
 				.card
 					.card-header
 						.card-title Transactions
-					.card-body(style="padding: 0px")
+					.card-body(style="padding: 5px")
 						.table-responsive
-							table.table.table-bordered.table-striped#tableTxn
+							table.table.table-striped.display#tableTxn(width="100%" cellspacing="0")
 								thead
 									tr
 										th Txn Hash
@@ -25,5 +25,43 @@ block add_script
 	script.
 		var tableTxn;
 		$(function (){
-			fetchDataTable(`#tableTxn`,`/trx/dataTable`);
+			$('.nameMethod').tooltip()
+			tableTxn = $('#tableTxn').removeAttr("width").DataTable({
+				serverSide: true,
+				"pageLength":  50,
+				searching : false,
+				"autoWidth" : true,
+				fixedColumns: true,
+				ajax : '/trx/dataTable',
+				responsive: true,
+				columns : [
+					{
+						"data" : "hash",
+					},{
+						"data" : "method",
+					},{
+						"data" : "blockNumber",
+					},{
+						"data" : "age",
+					},{
+						"data" : "from",
+					},{
+						"data" : "to",
+					},{
+						"data" : "value",
+					},{
+						"data" : "txn_fee",
+					}
+				],
+				columnDefs : [
+					{ width: "20%", targets: 0 },
+					{ width: "8%", targets: 1 },
+					{ width: "10%", targets: 2 },
+					{ width: "15%", targets: 3 },
+					{ width: "20%", targets: 4 },
+					{ width: "20%", targets: 5 },
+					{ width: "3%", targets: 6 },
+					{ width: "5%", targets: 7 },
+				],
+			});
 		});
