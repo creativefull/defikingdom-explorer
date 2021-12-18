@@ -11,8 +11,8 @@ const CoinGeckoClient = new CoinGecko();
 
 function Dashboard() {
     this.index = async (req,res,next) => {
-        let trxData = await TrxModel.find().sort({timestamp: -1}).skip(0).limit(10)
-        let questData = await TrxModel.find({actionName: "QUEST"}).sort({timestamp: -1}).skip(0).limit(10)
+        let trxData = await TrxModel.find().sort({timestamp: -1}).skip(0).limit(5)
+        let questData = await TrxModel.find({actionName: "QUEST"}).sort({timestamp: -1}).skip(0).limit(5)
 
         let outputs = trxData.map((trx) => {
             trx.timestamp = moment.unix(trx.timestamp).fromNow()

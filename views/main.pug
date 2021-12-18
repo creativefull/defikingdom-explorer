@@ -1,95 +1,138 @@
 extends layout
+block middleContent
+    section.bg-dark(style="background-image: url('https://defikingdoms.com/img/defi-kingdoms-bg.png'); height: 291px;")
+        .container.space-top-2.space-bottom-3
+            .row.justify-content-between.align-items-center.mb-4
+                .col-md-12.col-lg-7
+                    .pr-lg-4.pr-xll-5
+                        h1.h4.mb-3.text-white DeFi Kingdoms Explorer
+                    form.mb-3(action="/search" method="GET")
+                        .input-group.input-group-shadow
+                            .input-group-prepend.d-none.d-md-block
+                                select(name="f" class="custom-select custom-arrow-select input-group-text font-size-base filterby")
+                                    option(value="0") All Filters
+                                    options Address
+                                    options Token
+                                    options Hash
+                            input#txtSearchInput(class="form-control searchautocomplete ui-autocomplete-input list-unstyled py-3 mb-0" placeholder="Search by Txn Hash" autocomplete="off")
+                            input(type="hidden")#hdnSearchText
+                            .input-group-append
+                                .btn.btn-primary(type="submit")
+                                    i.fa.fa-search
+
 block content
-    div.container
-        .row
-            .col-md-4
-                .card.p-3
-                    .d-flex.align-items-center
-                        span.stamp.stamp-md.bg-default.mr-3(style="background-color:#FFF")
-                            img(src="https://assets.coingecko.com/coins/images/18570/small/fAisLIV.png?1632449282", alt="Icon Jewel" width="32")
-                        div
-                            h5.mb-1(style="margin-bottom: 0px") Jewel Price
-                            b#jewel-price.text-muted Loading...
-            .col-md-4
-                .card.p-3
-                    .d-flex.align-items-center
-                        span.stamp.stamp-md.bg-default.mr-3(style="background-color:#FFF")
-                            i.icon-chart.text-warning
-                        div
-                            h5.mb-1(style="margin-bottom: 0px") Transactions Volume
-                            b#jewel-volume.text-muted Loading...
-            .col-md-4
-                .card.p-3
-                    .d-flex.align-items-center
-                        span.stamp.stamp-md.bg-default.mr-3(style="background-color:#FFF")
-                            i.icon-chart.text-warning
-                        div
-                            h5.mb-1(style="margin-bottom: 0px") Market Cap
-                            b#jewel-cap.text-muted Loading...
-        .row
-            .col-md-7.col-xs-12.col-sm-12
+    div.container.space-bottom-1.mt-n5
+        .card.mb-5
+            .card-body(style="padding: 1em")
+                .row.mx-gutters-md-1.align-items-center
+                    .col-md-6.col-lg-4
+                        .media.align-items-center
+                            figure.u-sm-avatar.mr-4
+                                img(src="https://assets.coingecko.com/coins/images/18570/small/fAisLIV.png?1632449282", alt="Icon Jewel" width="32")
+                            .media-body
+                                h2.font-size-1.text-uppercase.text-secondary.mb-0 JEWEL PRICE
+                                a.text-size-1(href="#" rel="tooltip" data-toggle="tooltip" data-placement="bottom" title data-original-title="View Historical JEWEL Price")#jewel-price
+                        hr.hr-space-lg
+                        .media.align-items-center
+                            figure.u-sm-avatar.mr-4
+                                i.icon-chart.text-warning
+                            .media-body
+                                h2.font-size-1.text-uppercase.text-secondary.mb-0 JEWEL MARKET CAP ON HARMONY
+                                a.text-size-1(href="#" rel="tooltip" data-toggle="tooltip" data-placement="bottom" title data-original-title="View Historical JEWEL Price")#jewel-cap
+                        hr.hr-space-lg
+                    .col-md-6.col-lg-4.u-ver-divider.u-ver-divider--left.u-ver-divider--none-md
+                        .media.align-items-center
+                            figure.u-sm-avatar.mr-4
+                                i.icon-chart.text-warning
+                            .media-body
+                                h2.font-size-1.text-uppercase.text-secondary.mb-0 LATEST BLOCK
+                                a.text-size-1(href="#" rel="tooltip" data-toggle="tooltip" data-placement="bottom" title data-original-title="View Historical JEWEL Price")#harmony-block Loading...
+                        hr.hr-space-lg
+                        .media.align-items-center
+                            figure.u-sm-avatar.mr-4
+                                i.icon-chart.text-warning
+                            .media-body
+                                h2.font-size-1.text-uppercase.text-secondary.mb-0 TRANSACTIONS
+                                a.text-size-1(href="#" rel="tooltip" data-toggle="tooltip" data-placement="bottom" title data-original-title="View Historical JEWEL Price")#jewel-volume
+                        hr.hr-space-lg
+        .row.mb-5
+            .col-md-6.mb-5.col-xs-12.col-sm-12
                 .card
                     .card-header
-                        .card-title Lastest Transactions
+                        .card-header-title Lastest Transactions
                     .card-body(style="padding: 0px")
                         .table-responsive
-                            table.table.table-bordered.table-striped#table-txn
+                            table.table.table-hover#table-txn
                                 tbody
                                     each trx in lastTrx
                                         tr
                                             td
                                                 .row(style="padding: 10px; flex-wrap: nowrap")
-                                                    .col-md-1.col-sm-1(style="margin-right: 10px; padding-left: 0px")
-                                                        .avatar
-                                                            span.avatar-title.rounded-circle.border.border-white(title=trx.actionName style="background-color: " + trx.bgColor)
-                                                                if trx.icon
-                                                                    i.fa(class=trx.icon)
-                                                                else
-                                                                    small= trx.actionName.substring(0,1)
-                                                    .col-md-3.col-sm-3(style="margin-left: 10px")
-                                                        div
-                                                            a(href="/tx/" + trx.hash title=trx.hash)= trx.hash.substring(0, 8) + '...'
-                                                        small= trx.timestamp
-                                                    .col-md-4.col-sm-4
-                                                        div
-                                                            span From 
-                                                            span
-                                                                a(href="#" title="Profile")= trx.from.substring(0,10) + '...'
-                                                        div
-                                                            span To 
-                                                            span
-                                                                a(href="#" title="Profile")= trx.to.substring(0,10) + '...'
-                                                    .col-md-4.col-sm-4
-                                                        div.text-right
-                                                            b
-                                                                small.badge(style="background-color: #FFDCB5; color: #111; font-weight: bold; border: 0px")= trx.amount + ' JEWEL'
-            .col-md-5
+                                                    .col-sm-4
+                                                        .media.align-items-sm-center.mr-4.mb-1.mb-sm-0
+                                                            .d-none.d-sm-flex.mr-2
+                                                                span.btn.btn-icon.btn-soft-secondary
+                                                                    span.btn-icon__inner.text-dark
+                                                                        if trx.icon
+                                                                            i.fa(class=trx.icon)
+                                                                        else
+                                                                            small= trx.actionName.substring(0,1)
+                                                            .media-body
+                                                                a.hash-tag.hash-tag--xs.hash-tag-xs-down--md.text-truncate(href="/tx/" + trx.hash title=trx.hash)= trx.hash.substring(0, 8) + '...'
+                                                                    span.d-none.d-sm-block.small.text-secondary= trx.timestamp
+                                                    .col-sm-8
+                                                        .d-sm-flex.justify-content-between
+                                                            .text-nowrap.mr-4.mb-1.mb-sm-0
+                                                                span From 
+                                                                span
+                                                                    a(href="#" title="Profile").hash-tag.hash-tag--sm.text-truncate= trx.from
+                                                                span.d-sm-block To 
+                                                                    a(href="#" title="Profile").hash-tag.hash-tag--sm.text-truncate= trx.to
+                                                            div
+                                                                span.u-label.u-label--xs.u-label--badge-in.u-label--secondary.text-center.text-nowrap= trx.amount + ' JEWEL'
+                    .card-footer
+                        a.btn.btn-xs.btn-block.btn-soft-primary(href="/trx" title="View All Transactions") View All Transactions
+            .col-md-6.mb-5
                 .card
                     .card-header
-                        .card-title Lastest Quests
+                        .card-header-title Lastest Quests
                     .card-body(style="padding: 0px")
                         .table-responsive
-                            table.table.table-bordered.table-striped#table-quests
+                            table.table.table-hover#table-quests
                                 tbody
                                     each quest in quests
                                         tr
                                             td
-                                                .row(style="padding: 10px; flex-wrap: nowrap; padding-left: 0px")
-                                                    .col-md-5.col-sm-5
-                                                        div
-                                                            if quest.method == 'startQuest'
-                                                                small Start Quest
-                                                            else
-                                                                small Complete Quest
-                                                        div
-                                                            small= quest.timestamp
-                                                    .col-md-4.col-sm-4
-                                                        small
-                                                            a(href="/tx/" + quest.hash title="View Detail")= quest.hash.substring(0, 7) + '...'
-                                                    .col-md-3.col-sm-3
-                                                        div.text-right
-                                                            b
-                                                                small.badge(style="background-color: #FFDCB5; color: #111; font-weight: bold; border: 0px")= quest.questName
+                                                .row(style="padding: 10px; flex-wrap: nowrap")
+                                                    .col-sm-4
+                                                        .media.align-items-sm-center.mr-4.mb-1.mb-sm-0
+                                                            .d-none.d-sm-flex.mr-2
+                                                                span.btn.btn-icon.btn-soft-secondary
+                                                                    span.btn-icon__inner.text-dark
+                                                                        i.fa.icon-drop
+                                                            .media-body
+                                                                a.hash-tag.hash-tag--xs.hash-tag-xs-down--md.text-truncate(href="#")
+                                                                    if quest.method == 'startQuest'
+                                                                        span Start Quest
+                                                                    else
+                                                                        span Complete Quest
+                                                                    span.d-none.d-sm-block.small.text-secondary= quest.timestamp
+                                                    .col-sm-8
+                                                        .d-sm-flex.justify-content-between
+                                                            .text-nowrap.mr-4.mb-1.mb-sm-0
+                                                                if quest.method == 'startQuest'
+                                                                    span Started Quest
+                                                                    span.d-sm-block By 
+                                                                        a(href="#" title="Profile").hash-tag.hash-tag--sm.text-truncate= quest.from
+                                                                else
+                                                                    span Completing Quest
+                                                                    span.d-sm-block By 
+                                                                        a(href="#" title="Profile").hash-tag.hash-tag--sm.text-truncate= quest.to
+                                                            div
+                                                                if (quest.method == 'startQuest')
+                                                                    span.u-label.u-label--xs.u-label--badge-in.u-label--secondary.text-center.text-nowrap= quest.questName
+                    .card-footer
+                        a.btn.btn-xs.btn-block.btn-soft-primary(href="/trx/quests" title="View All Quest") View All Quests
 
 block script
     script.
@@ -104,6 +147,7 @@ block script
                         let lastPrice = parseFloat(data.data.prices[0][1]).toFixed(2)
                         let lastVolumes = parseFloat(data.data.total_volumes[0][1]).toFixed(2)
                         let lastCap = parseFloat(data.data.market_caps[0][1]).toFixed(2)
+
                         $("#jewel-price").text(`$ ${lastPrice}`)
                         $("#jewel-volume").text(Number(lastVolumes).toLocaleString())
                         $("#jewel-cap").text(`$ ${Number(lastCap).toLocaleString()}`)

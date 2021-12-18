@@ -1,3 +1,14 @@
+const tokenList = require('../config/token.json')
+const erc20abis = tokenList.map((t) => {
+    return {
+        type: t.symbol,
+        address: t.address,
+        abi: require('../abi/erc20.json'),
+        icon: 'fa-icon',
+        color: '#FFF'
+    }
+})
+
 exports.abis = [{
     'type': 'ROUTER',
     'address': '0x24ad62502d1c652cc7684081169d04896ac20f30',
@@ -22,4 +33,4 @@ exports.abis = [{
     'abi': require('../abi/saleAuction.json'),
     'icon': 'icon-basket-loaded',
     'color': '#ACBAC9'
-}]
+}, ...erc20abis]

@@ -14,9 +14,9 @@ html(lang="en")
                     sessionStorage.fonts = true;
                 }
             });
-        link(rel="stylesheet", href="/css/bootstrap.min.css")
-        link(rel="stylesheet", href="/css/atlantis2.css")
-        link(rel="stylesheet", href="/css/demo.css")
+        //- link(rel="stylesheet", href="/css/bootstrap.min.css")
+        //- link(rel="stylesheet", href="/css/atlantis2.css")
+        link(rel="stylesheet", href="/css/themes.min.css")
         style.
             .main-header .nav-bottom .page-navigation.page-navigation-info > .nav-item > .nav-link .link-icon {
                 color: #0EAC51
@@ -24,47 +24,56 @@ html(lang="en")
             a {
                 color: #E67E22
             }
+            body {
+                background-color: #f8f9fa!important
+            }
+            .push {
+                margin-bottom: 10em;
+            }
         block style
     body
-        div.wrapper.horizontal-layout-2
-            .main-header(style="background: rgba(16, 15, 33, 0.85)")
-                .nav-top
-                    .container.d-flex.flex-row
-                        button.navbar-toggler.sidenav-toggler.ml-auto(type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle Navigation")
-                            span.navbar-toggler-icon
-                                i.icon-menu
-                        button.topbar-toggler.more
-                            i.icon-options-vertical
-                        a(href="/").logo.d-flex.align-items-center.mb-2
-                            img(src="https://defikingdoms.com/img/defi-kingdoms-logo.png" alt="navbar brand" class="navbar-brand" width="180px")
-                .nav-bottom
-                    .container
-                        h3.title-menu.d-flex.d-lg-none Menu
-                            .close-menu
-                                i.flaticon-cross
-                        ul.nav.page-navigation.page-navigation-info.bg-white
-                            li.nav-item
-                                a.nav-link(href="#" title="Home")
-                                    i.link-icon.icon-screen-desktop
-                                    span.menu-title Monitoring
-                            li.nav-item
-                                a.nav-link(href="#" title="Heroes")
-                                    i.link-icon.fas.fa-user-astronaut
-                                    span.menu-title Heroes
-                            li.nav-item
-                                a.nav-link(href="#" title="Hero")
-                                    i.link-icon.fas.fa-chalkboard-teacher
-                                    span.menu-title Quests
-                            li.nav-item
-                                a.nav-link(href="#" title="Home")
-                                    i.link-icon.fas.fa-shopping-bag
-                                    span.menu-title Taverns
-            
-            .main-panel
-                .container
-                    .container
-                        include search
-                    block content
+        div.wrapper(style="min-height: 100vh;")
+            header#header.u-header
+                .u-header__section
+                    #logoAndNav.container
+                        nav.js-mega-menu.navbar.navbar-expand-md.u-header__navbar.u-header__navbar--no-space.hs-menu-initialized.hs-menu-horizontal
+                            .w-lg-auto
+                                a.navbar-brand.pt-md-0(href="/" aria-label="DFKScan")
+                                    img(src="https://defikingdoms.com/img/defi-kingdoms-logo.png" alt="navbar brand" width="160px")#logo-header
+                                //- #onePrice
+                                //-     .d-none.d-md-inline-block.u-label.u-label--price.rounded.mt-1.ml-n1.text-nowrap
+                                //-         span.text-dark JEWEL : $8,5
+                                //-         span(data-toggle="tooltip" data-placement="top" data-title="Changes in the last 24 hours" data-original-title title)
+                                //-             span.text-success (+10,5%)
+                            div
+                            .d-flex.flex-column.w-100
+                                #navBar.collapse.navbar-collapse.u-header__navbar-collapse.order-md-2
+                                    ul.navbar-nav.u-header__navbar-nav.px-2.px-md-0
+                                        li.nav-item.u-header__nav-item(data-event="hover" data-animation-in="slideInUp" data-animation-out="fadeOut")
+                                            a.nav-link.u-header__nav-link(href="/") Home
+                                        li.nav-item.u-header__nav-item(data-event="hover" data-animation-in="slideInUp" data-animation-out="fadeOut")
+                                            a.nav-link.u-header__nav-link(href="/") Transactions
+                                        li.nav-item.u-header__nav-item(data-event="hover" data-animation-in="slideInUp" data-animation-out="fadeOut")
+                                            a.nav-link.u-header__nav-link(href="/token/list") Tokens
+                                        li.nav-item.u-header__nav-item(data-event="hover" data-animation-in="slideInUp" data-animation-out="fadeOut")
+                                            a.nav-link.u-header__nav-link(href="/token/list") Heroes
+            block middleContent
+            block content
+        .push
+        footer.bg-dark.py-4(style="background-image: url('https://defikingdoms.com/img/defi-kingdoms-bg.png');")
+            .container
+                .row.justify-content-sm-between.align-items-center
+                    .col-sm-12.mb-3.mb-sm-0
+                        .d-flex.align-items-center
+                            img(src="https://assets.coingecko.com/coins/images/18570/small/fAisLIV.png?1632449282", alt="Icon Jewel" width="25")
+                            span.h5.text-white.mb-0.ml-3 DeFi Kingdom Harmony Chain
+                        hr.opacity-md
+                        .row.justify-content-between.align-items-center.font-size-1
+                            .col-md-12.mb-2.mb-md-0.d-flex
+                                p.mb-0.text-white DFKScan &copy; 2021
+                                    span.mx-1 |
+                                    | Built by Community and Reference From 
+                                    a(href="https://etherscan.io") Etherscan
 
         script(src="/js/core/jquery.3.2.1.min.js")
         script(src="/js/core/popper.min.js")

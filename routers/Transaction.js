@@ -2,6 +2,8 @@ const Web3 = require('web3')
 const web3 = new Web3(HMY_RPC_URL)
 const TrxModel = require('../models/transaksi')
 const moment = require('moment')
+const _ = require('underscore')
+const {abis} = require('../miners/abis')
 
 function Transaction () {
 
@@ -23,28 +25,48 @@ function Transaction () {
 				let output = result.map((x, idx) => {
 					let timestamp = moment.unix(x.timestamp).fromNow();
 					let txn_fee = (x.gas * parseInt(x.gasPrice)) / 10 ** 18;
+					let amount = 0
+					x.tokenTransfers.forEach((t) => {
+						if (t.symbol == 'JEWEL') {
+							amount += t.amount
+						}
+					})
+
+					abis.map((a) => a.address = a.address.toLowerCase())
+					/* CHECK ADDRESS FROM / TO */
+					let checkFrom = _.findWhere(abis, {address: x.from.toLowerCase()})
+					let checkTo = _.findWhere(abis, {address: x.to.toLowerCase()})
+
+					if (checkFrom) {
+						x.from = checkFrom.type
+					}
+					if (checkTo) {
+						x.to = checkTo.type
+					}
+
+
 					return {
 						_id : x._id,
 						hash : `
-							<a href = '#'>
-							${x.hash.substring(0, 10)} ...
+							<a href = '/tx/${x.hash}' class='hash-tag hash-tag--sm text-truncate'>
+							${x.hash}
 							</a>
 						`,
 						method : `
-							<a class = 'nameMethod' data-toggle="tooltip" data-placement="top" data-original-title = "${x.method}" title="${x.method}">
+							<span class = 'u-label u-label--xs u-label--info rounded text-dark text-center' style='min-width:68px;' data-toggle="tooltip" data-placement="top" data-original-title = "${x.method}" title="${x.method}">
 								${x.method?x.method:''}
-							</a>
+							</span>
 						`,
 						blockNumber : x.blockNumber,
 						age : timestamp,
 						from : `
-							<a href = '/address/${x.from}'>${x.from.substring(0, 10)} ...</a>
+							<a href = '/address/${x.from}' class='hash-tag hash-tag--sm text-truncate'>${x.from}</a>
 						`,
 						to : `
-							<a href = '/address/${x.to}'>${x.to.substring(0, 10)} ...</a>
+							<a href = '/address/${x.to}' class='hash-tag hash-tag--sm text-truncate'>${x.to}</a>
 						`,
-						value : `${x.value} BNB`,
-						txn_fee : txn_fee,
+						value : `${parseFloat(amount).toFixed(2)} JEWEL`,
+						txn_fee : `<small class='small text-secondary'>${parseFloat(txn_fee).toFixed(5)}</small>`,
 					}
 				});
 

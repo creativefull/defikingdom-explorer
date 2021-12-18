@@ -1,32 +1,35 @@
 extends layout
 block content
-	div.container
-		.row
-			.col-md-12.col-xs-12.col-sm-12
-				.card
-					.card-header
-						.card-title Transactions
-					.card-body(style="padding: 5px")
-						.table-responsive
-							table.table.table-hover.display#tableTxn(width="100%" cellspacing="0")
-								thead
-									tr
-										th Txn Hash
-										th Method
-										th Block
-										th Age
-										th From
-										th To
-										th Value
-										th Txn Fee
-								tbody
+	main#content
+		.container
+			.d-md-flex.justify-content-between.align-items-center.py-3
+				.mb-1.mb-md-0
+					h1.h4.mb-0 Transactions
+			.row
+				.col-md-12.col-xs-12.col-sm-12
+					.card
+						.card-body(style="padding: 5px")
+							.table-responsive
+								table.table.table-hover.display#tableTxn(width="100%" cellspacing="0")
+									thead.thead-light
+										tr
+											th Txn Hash
+											th Method
+											th Block
+											th Age
+											th From
+											th To
+											th Value
+											th Txn Fee
+									tbody
 
 block script
 	script.
 		var tableTxn;
 		$(function (){
 			$('.nameMethod').tooltip()
-			tableTxn = $('#tableTxn').removeAttr("width").DataTable({
+
+			tableTxn = $('#tableTxn').DataTable({
 				serverSide: true,
 				"pageLength":  50,
 				searching : false,
@@ -34,6 +37,7 @@ block script
 				fixedColumns: true,
 				ajax : '/trx/dataTable',
 				responsive: true,
+				lengthChange: false,
 				columns : [
 					{
 						"data" : "hash",
@@ -54,12 +58,12 @@ block script
 					}
 				],
 				columnDefs : [
-					{ width: "20%", targets: 0 },
+					{ width: "10%", targets: 0 },
 					{ width: "8%", targets: 1 },
-					{ width: "10%", targets: 2 },
-					{ width: "15%", targets: 3 },
-					{ width: "20%", targets: 4 },
-					{ width: "20%", targets: 5 },
+					{ width: "5%", targets: 2 },
+					{ width: "5%", targets: 3 },
+					{ width: "10%", targets: 4 },
+					{ width: "10%", targets: 5 },
 					{ width: "3%", targets: 6 },
 					{ width: "5%", targets: 7 },
 				],

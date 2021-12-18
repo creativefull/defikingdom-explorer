@@ -29,6 +29,7 @@ function Txn() {
         if (data) {
             data.fee = (data.gas * parseInt(data.gasPrice)) / 10 ** 18;
             /* CHECK ADDRESS FROM / TO */
+            abis.map((t) => t.address = t.address.toLowerCase())
             let checkFrom = _.findWhere(abis, {address: data.from.toLowerCase()})
             let checkTo = _.findWhere(abis, {address: data.to.toLowerCase()})
 

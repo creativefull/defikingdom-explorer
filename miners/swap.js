@@ -65,7 +65,7 @@ let parseTrx = (hash) => {
         if (detail) {
             let trxData = await Promise.all(
                 abis.abis.map(async (abi, index) => {
-                    if ((detail.to.toLowerCase() == abi.address) || (detail.from?.toLowerCase() == abi.address)) {
+                    if ((detail.to.toLowerCase() == abi.address.toLowerCase()) || (detail.from?.toLowerCase() == abi.address.toLowerCase())) {
                         let d = await parseTokenTransfer(detail)
                         let blockDetail = await web3.eth.getBlock(detail.blockNumber)
         
