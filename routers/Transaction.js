@@ -26,8 +26,8 @@ function Transaction () {
 					return {
 						_id : x._id,
 						hash : `
-							<a href = '#'>
-							${x.hash.substring(0, 10)} ...
+							<a href = '/tx/${x.hash}' title = '${x.hash}'>
+								${x.hash.substring(0, 10)} ...
 							</a>
 						`,
 						method : `
@@ -43,7 +43,7 @@ function Transaction () {
 						to : `
 							<a href = '/address/${x.to}'>${x.to.substring(0, 10)} ...</a>
 						`,
-						value : `${x.value} BNB`,
+						value : `${x.value} ONE`,
 						txn_fee : txn_fee,
 					}
 				});

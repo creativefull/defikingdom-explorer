@@ -14,11 +14,58 @@ block content
 						hr
 						div(class = 'row align-items-center')
 							div(class = 'col-md-3 mb-1 mb-md-0') Balance:
-							div.col-md-9 
-								b #{balance}
+							div.col-md-9 #{balance}
+								b  ONE
 						hr
 		br
 		div.row
 			div.col-lg-12
 				.card
 					.card-body
+						ul(class = 'nav nav-pills nav-secondary' id = 'pills-tab' role = 'tablist')
+							li(class = 'nav-item submenu')
+								a(class="nav-link active show" id="pills-trx-tab" data-toggle="pill" href="#pills-trx" role="tab" aria-controls="pills-trx" aria-selected="true") Transactions
+							li(class = 'nav-item submenu')
+								a(class="nav-link" id="pills-heroes-tab" data-toggle="pill" href="#pills-heroes" role="tab" aria-controls="pills-heroes" aria-selected="false") Heroes
+							li(class = 'nav-item submenu')
+								a(class="nav-link" id="pills-garden-tab" data-toggle="pill" href="#pills-garden" role="tab" aria-controls="pills-garden" aria-selected="false") Garden
+
+						div.tab-content.mt-2.mb-3#pills-tabContent
+							div(class="tab-pane fade active show" id="pills-trx" role="tabpanel" aria-labelledby="pills-trx-tab")
+								.table-responsive
+									table.table.display(width="100%" cellspacing="0")
+										thead
+											tr
+												th Txn Hash
+												//- th Method
+												th Block
+												th Age
+												th From
+												th To
+												th Value
+												th Txn Fee
+										tbody
+											each trx in lastTrx
+												tr(style = 'padding: 10px;')
+													td
+														a(href="/tx/" + trx.hash title=trx.hash)= trx.hash.substring(0, 15) + '...'
+													td 
+														a(href = '#') #{trx.blockNumber}
+													td 
+														small #{trx.timestamp}
+													td
+														a(href="/address/" + trx.from title=trx.from)= trx.from.substring(0, 15) + '...'
+													td
+														a(href="/address/" + trx.to title=trx.to)= trx.to.substring(0, 15) + '...'
+													td 
+														small #{trx.value} ONE
+													td 
+														small #{trx.txn_fee}
+
+
+							div(class="tab-pane fade" id="pills-heroes" role="tabpanel" aria-labelledby="pills-heroes-tab")
+								h3 Comming Soon
+							div(class="tab-pane fade" id="pills-garden" role="tabpanel" aria-labelledby="pills-garden-tab")
+								h3 Comming Soon
+
+
