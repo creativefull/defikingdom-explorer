@@ -26,7 +26,7 @@ function Transaction () {
 					let timestamp = moment.unix(x.timestamp).fromNow();
 					let txn_fee = (x.gas * parseInt(x.gasPrice)) / 10 ** 18;
 					let amount = 0
-					x.tokenTransfers.forEach((t) => {
+					x.tokenTransfers?.forEach((t) => {
 						if (t.symbol == 'JEWEL') {
 							amount += t.amount
 						}
@@ -81,6 +81,7 @@ function Transaction () {
 				});
 			})
 			.catch((err) => {
+				console.error(err)
 				console.log('[ERROR DATATABLE] ', err.message);
 				return res.json({
 					draw: req.query.draw,
