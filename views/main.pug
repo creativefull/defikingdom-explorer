@@ -85,9 +85,9 @@ block content
                                                             .text-nowrap.mr-4.mb-1.mb-sm-0
                                                                 span From 
                                                                 span
-                                                                    a(href="#" title="Profile").hash-tag.hash-tag--sm.text-truncate= trx.from
+                                                                    a(href=`/address/${trx.from}` title="Profile").hash-tag.hash-tag--sm.text-truncate= trx.from
                                                                 span.d-sm-block To 
-                                                                    a(href="#" title="Profile").hash-tag.hash-tag--sm.text-truncate= trx.to
+                                                                    a(href=`/address/${trx.to}` title="Profile").hash-tag.hash-tag--sm.text-truncate= trx.to
                                                             div
                                                                 span.u-label.u-label--xs.u-label--badge-in.u-label--secondary.text-center.text-nowrap= trx.amount + ' JEWEL'
                     .card-footer
@@ -132,7 +132,7 @@ block content
                                                                 if (quest.method == 'startQuest')
                                                                     span.u-label.u-label--xs.u-label--badge-in.u-label--secondary.text-center.text-nowrap= quest.questName
                     .card-footer
-                        a.btn.btn-xs.btn-block.btn-soft-primary(href="/trx/quests" title="View All Quest") View All Quests
+                        a.btn.btn-xs.btn-block.btn-soft-primary(href="/trx/quest" title="View All Quest") View All Quests
 
 block script
     script.

@@ -15,5 +15,7 @@ app.get('/tx/:hash', Txn.detail)
 app.get('/token/list', Token.list)
 app.get('/trx', Transaction.index);
 app.get('/trx/dataTable', Transaction.dataTable);
+app.get('/trx/:action', Transaction.trxByAction);
+app.get('/trx/:action/dataTable', Transaction.dataTableOther);
 app.get('/address/:address', Profile.address);
 module.exports = exports = app
