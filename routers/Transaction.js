@@ -55,7 +55,7 @@ function Transaction () {
 							</a>
 						`,
 						method : `
-							<span class = 'u-label u-label--xs u-label--info rounded text-dark text-center' style='min-width:68px;' data-toggle="tooltip" data-placement="top" data-original-title = "${x.method}" title="${x.method}">
+							<span class = 'u-label u-label--xs u-label--info rounded text-dark text-center nameMethod' style='min-width:68px;' data-toggle="tooltip" data-placement="top" data-original-title = "${x.method}" title="${x.method}">
 								${x.method?x.method:''}
 							</span>
 						`,
@@ -159,7 +159,7 @@ function Transaction () {
 							<a href = '/address/${x.from}' class='hash-tag hash-tag--sm text-truncate'>${x.from}</a>
 						`,
 						to : `
-							<a href = '/address/${x.to}' class='hash-tag hash-tag--sm text-truncate'>${x.to}</a>
+							<a href = '#' class='hash-tag hash-tag--sm text-truncate'>${x.to}</a>
 							${x.method=='startQuest'?elmActionName:''}
 						`,
 						value : `${parseFloat(amount).toFixed(2)} JEWEL`,

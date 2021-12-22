@@ -13,18 +13,19 @@ block content
 					.card-body
 						div(class = 'row align-items-center')
 							div(class = 'col-md-4 mb-1 mb-md-0') Balance:
-							div.col-md-8 0
-								b .
-								| 036461791163288827 BNB
+							div.col-md-8 
+								//- span 0.036461791163288827 JEWEL
+								span#jewel-price
+								//- a.text-size-1(href="#" rel="tooltip" data-toggle="tooltip" data-placement="bottom" title data-original-title="View Historical JEWEL Price")#jewel-price
 						hr
 						div(class = 'row align-items-center')
-							div(class = 'col-md-4 mb-1 mb-md-0') BNB Value:
-							div.col-md-8 $19.18 
-								span.small(tyle = 'position:relative;top:-1px') (@ $526.12/BNB)
+							div(class = 'col-md-4 mb-1 mb-md-0') ONE Value:
+							div.col-md-8
+								span#usd-price
 						hr
 						div(class = 'row align-items-center')
 							div(class = 'col-md-4 mb-1 mb-md-0') Token:
-							div.col-md-8 $19.18 
+							div.col-md-8 
 								span.small(tyle = 'position:relative;top:-1px') -
 
 			div.col-lg-6
@@ -40,6 +41,95 @@ block content
 		div.row
 			div.col-lg-12
 				.card
-					.card-header
-						nav(class = 'nav nav-pills nav-secondary')
 					.card-body
+						div(class = 'page-navs bg-white')
+							div.nav-scroller
+								div(class = 'nav nav-tabs nav-line nav-color-secondary d-flex align-items-center justify-contents-center w-100')
+									a(class="nav-link active show" data-toggle="tab" href="#tabTrx") Transaction
+									a(class="nav-link mr-5" data-toggle="tab" href="#tabHeroes") Heroes
+									a(class="nav-link mr-5" data-toggle="tab" href="#tabGarden") Garden
+
+						div(class="tab-content")
+							div(id="tabTrx" class="tab-pane out active")
+								br
+								.row
+									.col-md-12.col-xs-12.col-sm-12
+										.table-responsive
+											table.table.table-hover.display#tableLastTxn(width="100%" cellspacing="0")
+												thead.thead-light
+													tr
+														th Txn Hash
+														//- th Method
+														th Block
+														th Age
+														th From
+														th To
+														th Value
+														th Txn Fee
+												tbody
+								
+							div(id="tabHeroes" class="tab-pane fade")
+								h3 Heroes
+								p Some Content.
+							div(id="tabGarden" class="tab-pane fade")
+								h3 Garden
+								p Some Content.
+							
+block script
+	script.
+		var tableLastTxn;
+		let address = '#{address}';
+		$(function (){
+			$('.nameMethod').tooltip();
+
+			$.ajax({
+				url: `/address/${address}/stats`,
+				beforeSend: () => {
+				},
+				success: (msg) => {
+					if (msg.status == 200) {
+						let data = msg.data;
+
+						$("#jewel-price").text(`${data.jewelPrice} JEWEL`);
+						$("#usd-price").text(`$ ${data.usdPrice}`);
+					}
+				}
+			});
+
+			tableLastTxn = $('#tableLastTxn').DataTable({
+				serverSide: FALSE,
+				"pageLength":  50,
+				searching : false,
+				"autoWidth" : true,
+				fixedColumns: true,
+				ajax : `/address/${address}/dataTable`,
+				responsive: true,
+				lengthChange: false,
+				columns : [
+					{
+						"data" : "hash",
+					},{
+						"data" : "blockNumber",
+					},{
+						"data" : "age",
+					},{
+						"data" : "from",
+					},{
+						"data" : "to",
+					},{
+						"data" : "value",
+					},{
+						"data" : "txn_fee",
+					}
+				],
+				columnDefs : [
+					{ width: "10%", targets: 0 },
+					{ width: "5%", targets: 1 },
+					{ width: "5%", targets: 2 },
+					{ width: "10%", targets: 3 },
+					{ width: "10%", targets: 4 },
+					{ width: "3%", targets: 5 },
+					{ width: "5%", targets: 6 },
+				],
+			});
+		});
