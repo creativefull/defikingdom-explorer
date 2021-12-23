@@ -25,7 +25,6 @@ block style
 
 		.dropdown-content {
 			display: none;
-			height : 400px;
 			position: absolute;
 			background-color: #f6f6f6;
 			min-width: 100%;
@@ -72,8 +71,8 @@ block content
 							div.col-md-8 
 								span.small(tyle = 'position:relative;top:-1px')#listContractToken 
 									div.dropdown
-										input#inputToken(class = 'dropbtn form-control form-control-sm' onClick = 'myFunction()')
-										div(id="myListToken" class="dropdown-content" )
+										input#inputToken(class = 'dropbtn form-control form-control-sm' onClick = 'showToken()')
+										div(id="myListToken" class="dropdown-content")
 											input.form-control.form-control-sm(type="text" placeholder="Search.." id="searchToken" onkeyup="filterToken()")
 											//- ul(class = 'list list-unstyled mb-0')
 												li(class = 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1')
@@ -139,24 +138,38 @@ block script
 		var tableLastTxn;
 		let address = '#{address}';
 
-		function myFunction() {
+		function showToken() {
 			document.getElementById("myListToken").classList.toggle("show");
 		}
 
-		function filterFunction() {
-			var input, filter, ul, li, a, i;
+		function filterToken() {
+			var input, filter, ul, li, a, i, txtName, txtSymbol;
 			input = document.getElementById("searchToken");
 			filter = input.value.toUpperCase();
 			div = document.getElementById("myListToken");
+			li = div.getElementsByTagName("li");
 			a = div.getElementsByTagName("a");
-			for (i = 0; i < a.length; i++) {
-				txtValue = a[i].textContent || a[i].innerText;
-				if (txtValue.toUpperCase().indexOf(filter) > -1) {
-					a[i].style.display = "";
+			for (i = 0; i < li.length; i++) {
+				txtName = $(li[i]).attr('data-name');
+				txtSymbol = $(li[i]).attr('data-symbol');
+
+				if ((txtSymbol.toUpperCase().indexOf(filter) > -1) || (txtName.toUpperCase().indexOf(filter) > -1)) {
+					console.log('SHOW');
+					$(li[i]).show();
 				} else {
-					a[i].style.display = "none";
+					$(li[i]).hide();
+					console.log('HIDE');
 				}
 			}
+
+			//- for (i = 0; i < a.length; i++) {
+			//- 	txtValue = a[i].textContent || a[i].innerText;
+			//- 	if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			//- 		a[i].style.display = "";
+			//- 	} else {
+			//- 		a[i].style.display = "none";
+			//- 	}
+			//- }
 		}
 
 		$(function (){
@@ -182,7 +195,9 @@ block script
 							if (index == 0) balanceUsd = t.usdPrice;
 							if (t.balance>0 && index >0) {
 								let listChild = $('<li/>', {
-									class : 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1'
+									class : 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1',
+									'data-name' : t.name,
+									'data-symbol' : t.symbol,
 								});
 						
 								//- DIV LEFT
@@ -223,6 +238,7 @@ block script
 						});
 						$('input#inputToken').val(`$ ${balanceUsd}`);
 						$('#myListToken').append(parentList);
+						//- $('#myListToken').css('height', '400px');
 						//- $('#listContractToken').html(listContractToken);	
 					}
 				}
