@@ -1,4 +1,4 @@
-const erc20 = require('../abi/erc20.json');
+const erc20Abi = require('../abi/erc20.json');
 const ListToken = require('../config/token.json')
 const uniswapAbi = require('../abi/router.json')
 const {abis} = require('../miners/abis');
@@ -24,37 +24,93 @@ function Profile () {
 		})
 	}
 
+	const getPriceToken = async (walletAddress, tokenJewel, jewelUSDPrice, uniswapContract) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let outputToken = await Promise.all(ListToken.map(async (x) => {
+					let tokenAddress = x.address;
+					let tokenContract = new web3.eth.Contract(erc20Abi, tokenAddress);
+					let balance = await tokenContract.methods.balanceOf(walletAddress).call(); // get balance token
+
+					x.balance = (balance)/ 10 ** x.decimals;
+					if (x.address.toLowerCase() == tokenJewel) {
+						x.jewelPrice = 1;
+						x.usdPrice = parseFloat(parseFloat(jewelUSDPrice).toFixed(2))
+					} else {
+						let getAmount = await uniswapContract.methods.getAmountsOut(web3.utils.toBN(Number(1 * (10 ** x.decimals))), [x.address.toLowerCase(), tokenJewel]).call().catch(console.error); // get balance value token jewel
+						let getPrice = parseFloat(parseFloat(parseInt(getAmount[1]) / 10 ** 18).toFixed(4));
+						let usdPrice = getPrice * jewelUSDPrice;
+						
+						x.jewelPrice = getPrice;
+						x.usdPrice = parseFloat(parseFloat(usdPrice).toFixed(2));
+					}
+					
+					// console.log('[BALANCE] ', balance);
+					// console.log('[GET PRICE] ', getPrice);
+					return x;
+				}));
+
+				// console.log('[LIST TOKEN] ', outputToken);
+				return resolve(outputToken);
+			} catch (err) {
+				console.log('[ERROR TOKEN] ', err);
+				return reject(err);
+			}
+		});
+	}
+
 	this.stats = async (req, res, next) => {
 		let address = req.params.address;
 		
 		let uniswapContract = new web3.eth.Contract(uniswapAbi, '0x24ad62502d1c652cc7684081169d04896ac20f30')
-		let tokenJewel = '0x72Cb10C6bfA5624dD07Ef608027E366bd690048F'.toLowerCase()
+		let tokenJewel = '0x72Cb10C6bfA5624dD07Ef608027E366bd690048F'.toLowerCase();
 		let jewelPriceCG = await CoinGeckoClient.coins.fetchMarketChart('defi-kingdoms', {})
 		let jewelUSDPrice = 0
 		if (jewelPriceCG.code == 200) {
 			jewelUSDPrice = jewelPriceCG.data.prices[jewelPriceCG.data.prices.length - 1][1]
 		}
 
-		getBalance(address)
-			.then((rows) => {
-				let balance = rows.balance;
-				let getPrice = parseFloat(parseFloat(balance).toFixed(4));
-				let usdPrice = getPrice * jewelUSDPrice;
-				// console.log(`JEWEL USD : ${jewelUSDPrice}`);
-				// console.log(`[GET PRICE] : ${getPrice}`);
-				// console.log(`[USD PRICE] : ${usdPrice}`);
-
-				return res.json({
-					status : 200,
-					data : {
-						jewelPrice: getPrice,
-						usdPrice : parseFloat(parseFloat(usdPrice).toFixed(2)),
-					}
-				})
-			})
-			.catch((err) => {
-				return res.json({status : 500, message : err.message});
+		// await getPriceToken(address);
+		async.parallel({
+			tokens : function (callback) {
+				getPriceToken(address, tokenJewel, jewelUSDPrice, uniswapContract)
+					.then((rows) => {
+						return callback(null, rows);
+					})
+					.catch((err) => {
+						return callback(err.message, null);
+					});
+			},
+			myBalance : function (callback) {
+				getBalance(address)
+					.then((rows) => {
+						let balance = rows.balance;
+						let getPrice = parseFloat(parseFloat(balance).toFixed(4));
+						let usdPrice = getPrice * jewelUSDPrice;
+						
+						return callback(null,{
+							jewelPrice: getPrice,
+							usdPrice : parseFloat(parseFloat(usdPrice).toFixed(2)),
+						})
+					})
+					.catch((err) => {
+						return callback(err.message, null);
+					});
+			}
+		}, async (err, results) => {
+			console.log('[ERROR ASYNC STATS BALANCE]', err);
+			if (err) return res.json({status : 500, message : err.message});
+			// console.log('[RESULT] ', results);
+			let myBalance = results.myBalance;
+			return res.json({
+				status : 200,
+				data : {
+					jewelPrice : myBalance.jewelPrice,
+					usdPrice : myBalance.usdPrice,
+					tokens : results.tokens,
+				}
 			});
+		});
 	}
 
 	this.dataTableTransaction = async (req, res, next) => {

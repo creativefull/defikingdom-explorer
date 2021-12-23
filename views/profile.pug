@@ -1,4 +1,50 @@
 extends layout
+block style
+	style.
+		.dropbtn {
+			cursor: pointer;
+		}
+
+		#myInput {
+			margin : 5px;
+			box-sizing: border-box;
+			background-image: url('searchicon.png');
+			background-position: 14px 12px;
+			background-repeat: no-repeat;
+			font-size: 13px;
+			padding: 14px 20px 12px 25px;
+			border: none;
+			border-bottom: 1px solid #ddd;
+		}
+
+		#myInput:focus {outline: 3px solid #ddd;}
+
+		.dropdown {
+			position: relative;
+		}
+
+		.dropdown-content {
+			display: none;
+			height : 400px;
+			position: absolute;
+			background-color: #f6f6f6;
+			min-width: 100%;
+			overflow: scroll;
+			border: 1px solid #ddd;
+			z-index: 1;
+			padding : 5px;
+		}
+
+		.dropdown-content a {
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.dropdown a:hover {background-color: #ddd;}
+
+		.show {display: block;}
 block content
 	div.container
 		div.row
@@ -14,9 +60,7 @@ block content
 						div(class = 'row align-items-center')
 							div(class = 'col-md-4 mb-1 mb-md-0') Balance:
 							div.col-md-8 
-								//- span 0.036461791163288827 JEWEL
 								span#jewel-price
-								//- a.text-size-1(href="#" rel="tooltip" data-toggle="tooltip" data-placement="bottom" title data-original-title="View Historical JEWEL Price")#jewel-price
 						hr
 						div(class = 'row align-items-center')
 							div(class = 'col-md-4 mb-1 mb-md-0') ONE Value:
@@ -26,7 +70,22 @@ block content
 						div(class = 'row align-items-center')
 							div(class = 'col-md-4 mb-1 mb-md-0') Token:
 							div.col-md-8 
-								span.small(tyle = 'position:relative;top:-1px') -
+								span.small(tyle = 'position:relative;top:-1px')#listContractToken 
+									div.dropdown
+										input#inputToken(class = 'dropbtn form-control form-control-sm' onClick = 'myFunction()')
+										div(id="myListToken" class="dropdown-content" )
+											input.form-control.form-control-sm(type="text" placeholder="Search.." id="searchToken" onkeyup="filterToken()")
+											//- ul(class = 'list list-unstyled mb-0')
+												li(class = 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1')
+													a(class = 'link-hover d-flex justify-content-between align-items-center' style = 'width : 100%;' href = '#')
+														div
+															div(class = 'd-flex align-items-center')
+																img(class = 'mr-1 mCS_img_loaded' src = 'https://dfk-hv.b-cdn.net/art-assets/items/gaias-tear.png' style = 'width : 15px;')
+																span(class = 'list-name hash-tag text-truncate') MultiVAC (MTV)
+															span(class = 'list-amount link-hover__item hash-tag hash-tag--md text-truncate') 1,085.21737868 MTV
+														div.text-right
+															span(class = 'list-usd-value d-block') $10.61
+															span(class = 'list-usd-rate link-hover__item') @0.01
 
 			div.col-lg-6
 				.card
@@ -79,6 +138,27 @@ block script
 	script.
 		var tableLastTxn;
 		let address = '#{address}';
+
+		function myFunction() {
+			document.getElementById("myListToken").classList.toggle("show");
+		}
+
+		function filterFunction() {
+			var input, filter, ul, li, a, i;
+			input = document.getElementById("searchToken");
+			filter = input.value.toUpperCase();
+			div = document.getElementById("myListToken");
+			a = div.getElementsByTagName("a");
+			for (i = 0; i < a.length; i++) {
+				txtValue = a[i].textContent || a[i].innerText;
+				if (txtValue.toUpperCase().indexOf(filter) > -1) {
+					a[i].style.display = "";
+				} else {
+					a[i].style.display = "none";
+				}
+			}
+		}
+
 		$(function (){
 			$('.nameMethod').tooltip();
 
@@ -89,9 +169,61 @@ block script
 				success: (msg) => {
 					if (msg.status == 200) {
 						let data = msg.data;
-
-						$("#jewel-price").text(`${data.jewelPrice} JEWEL`);
+						let tokens = data.tokens;
+						$("#jewel-price").text(`${data.jewelPrice} ONE`);
 						$("#usd-price").text(`$ ${data.usdPrice}`);
+
+						let parentList = $('<ul/>',{
+							class : 'list list-unstyled mb-0'
+						});
+						let balanceUsd = 0;
+
+						tokens.forEach(function (t, index){
+							if (index == 0) balanceUsd = t.usdPrice;
+							if (t.balance>0 ) {
+								let listChild = $('<li/>', {
+									class : 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1'
+								});
+						
+								//- DIV LEFT
+								let divLeft = $('<div/>');
+								let divImg = $('<div/>',{
+									class : 'd-flex align-items-center'
+								}).append(`
+									<img class = 'mr-1 mCS_img_loaded' src = '${t.logoURI}' style = 'width : 15px;'>
+									<span class = 'list-name hash-tag text-truncate'>${t.name} (${t.symbol})</span>
+								`);
+								let spanBalance = $('<span/>',{
+									class : 'list-amount link-hover__item hash-tag hash-tag--md text-truncate',
+									text : `${t.balance} ${t.symbol}`
+								});
+								divLeft.append(divImg);
+								divLeft.append(spanBalance);
+
+								//- DIV RIGHT
+								let divRight = $('<div/>',{
+									class : 'text-right'
+								}).append(`
+									<span class = 'list-usd-value d-block'>$ ${t.usdPrice}</span>
+									<span class = 'list-usd-rate link-hover__item'>@${t.jewelPrice}</span>
+								`);
+
+								let aLink = $('<a/>',{
+									class : 'link-hover d-flex justify-content-between align-items-center',
+									style : 'width : 100%;',
+									href : `/token/${t.address}?a=${address}`,
+									target : '__blank'
+								});
+								aLink.append(divLeft);
+								aLink.append(divRight);
+
+								listChild.append(aLink);
+								parentList.append(listChild);
+							}
+						});
+						$('input#inputToken').val(`$ ${balanceUsd}`);
+						$('#myListToken').append(parentList);
+						//- $('#listContractToken').html(listContractToken);	
 					}
 				}
 			});
