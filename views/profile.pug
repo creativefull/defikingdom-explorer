@@ -180,7 +180,7 @@ block script
 
 						tokens.forEach(function (t, index){
 							if (index == 0) balanceUsd = t.usdPrice;
-							if (t.balance>0 ) {
+							if (t.balance>0 && index >0) {
 								let listChild = $('<li/>', {
 									class : 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1'
 								});
