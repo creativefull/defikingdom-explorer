@@ -127,8 +127,21 @@ block content
 												tbody
 								
 							div(id="tabHeroes" class="tab-pane fade")
-								h3 Heroes
-								p Comming Soon.
+								br
+								.row
+									.col-md-12.col-xs-12.col-sm-12
+										.table-responsive
+											table.table.table-hover.display#tableMyHeroes(width="100%" cellspacing="0")
+												thead.thead-light
+													tr
+														th ID
+														th Owner
+														th Current Quest
+														th First Name
+														th Last Name
+														th Profession
+														th Rarity
+												tbody
 							div(id="tabGarden" class="tab-pane fade")
 								h3 Garden
 								p Comming Soon.
@@ -136,6 +149,7 @@ block content
 block script
 	script.
 		var tableLastTxn;
+		var tableHeroes;
 		let address = '#{address}';
 
 		function showToken() {
@@ -244,13 +258,14 @@ block script
 				}
 			});
 
+			//- DATATABLE TRASCTION
 			tableLastTxn = $('#tableLastTxn').DataTable({
 				serverSide: false,
 				"pageLength":  50,
 				searching : false,
 				"autoWidth" : true,
 				fixedColumns: true,
-				ajax : `/address/${address}/dataTable`,
+				ajax : `/address/${address}/trx/dataTable`,
 				responsive: true,
 				lengthChange: false,
 				columns : [
@@ -268,6 +283,45 @@ block script
 						"data" : "value",
 					},{
 						"data" : "txn_fee",
+					}
+				],
+				columnDefs : [
+					{ width: "10%", targets: 0 },
+					{ width: "5%", targets: 1 },
+					{ width: "5%", targets: 2 },
+					{ width: "10%", targets: 3 },
+					{ width: "10%", targets: 4 },
+					{ width: "3%", targets: 5 },
+					{ width: "5%", targets: 6 },
+				],
+			});
+
+			//- DATATABLE HEROES
+			tableHeroes = $('#tableMyHeroes').DataTable({
+				serverSide: false,
+				"pageLength":  50,
+				searching : false,
+				"autoWidth" : true,
+				fixedColumns: true,
+				ajax : `/address/${address}/hero/dataTable`,
+				responsive: true,
+				lengthChange: false,
+				columns : [
+					{
+						"data" : "id",
+					},{
+						"data" : "owner",
+					},{
+						"data" : "currentQuest",
+					
+					},{
+						"data" : "firstName",
+					},{
+						"data" : "lastName",
+					},{
+						"data" : "profession",
+					},{
+						"data" : "rarity",
 					}
 				],
 				columnDefs : [

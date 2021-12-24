@@ -3,9 +3,16 @@ const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 3090
-let HMY_RPC_URL = process.env.HMY_RPC_URL || 'https://api.harmony.one'
+let HMY_RPC_URL = process.env.HMY_RPC_URL || 'https://api.harmony.one';
+const clientGraphql = require('graphql-client')({
+  url: 'https://graph2.defikingdoms.com/subgraphs/name/defikingdoms/apiv5',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
 
-global.HMY_RPC_URL = HMY_RPC_URL
+global.HMY_RPC_URL = HMY_RPC_URL;
+global.clientGraphql = clientGraphql;
 mongoose
   .connect(
     process.env.MONGO_URI || 'mongodb://localhost:27017/defikingdoms',

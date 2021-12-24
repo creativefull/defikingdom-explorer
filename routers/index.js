@@ -19,5 +19,6 @@ app.get('/trx/:action', Transaction.trxByAction);
 app.get('/trx/:action/dataTable', Transaction.dataTableOther);
 app.get('/address/:address', Profile.address);
 app.get('/address/:address/stats', Profile.stats);
-app.get('/address/:address/dataTable', Profile.dataTableTransaction);
+app.get('/address/:address/trx/dataTable', Profile.dataTableTransaction);
+app.get('/address/:address/hero/dataTable', Profile.dataTableHeroes);
 module.exports = exports = app

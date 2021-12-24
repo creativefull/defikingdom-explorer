@@ -25,41 +25,6 @@ function Profile () {
 		})
 	}
 
-	const getPriceToken = async (walletAddress, tokenJewel, jewelUSDPrice, uniswapContract) => {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let outputToken = await Promise.all(ListToken.map(async (x) => {
-					let tokenAddress = x.address;
-					let tokenContract = new web3.eth.Contract(erc20Abi, tokenAddress);
-					let balance = await tokenContract.methods.balanceOf(walletAddress).call(); // get balance token
-
-					x.balance = (balance)/ 10 ** x.decimals;
-					if (x.address.toLowerCase() == tokenJewel) {
-						x.jewelPrice = 1;
-						x.usdPrice = parseFloat(parseFloat(jewelUSDPrice).toFixed(2))
-					} else {
-						let getAmount = await uniswapContract.methods.getAmountsOut(web3.utils.toBN(Number(1 * (10 ** x.decimals))), [x.address.toLowerCase(), tokenJewel]).call().catch(console.error); // get balance value token jewel
-						let getPrice = parseFloat(parseFloat(parseInt(getAmount[1]) / 10 ** 18).toFixed(4));
-						let usdPrice = getPrice * jewelUSDPrice;
-						
-						x.jewelPrice = getPrice;
-						x.usdPrice = parseFloat(parseFloat(usdPrice).toFixed(2));
-					}
-					
-					// console.log('[BALANCE] ', balance);
-					// console.log('[GET PRICE] ', getPrice);
-					return x;
-				}));
-
-				// console.log('[LIST TOKEN] ', outputToken);
-				return resolve(outputToken);
-			} catch (err) {
-				console.log('[ERROR TOKEN] ', err);
-				return reject(err);
-			}
-		});
-	}
-
 	this.stats = async (req, res, next) => {
 		let address = req.params.address;
 		
@@ -173,6 +138,88 @@ function Profile () {
 			});
 	}
 
+	this.dataTableHeroes = async (req, res, next) => {
+		let address = req.params.address;
+		getHeroes(address)
+			.then(async (heros) => {
+				let output = heros.map((x) => {
+
+					return {
+						id : x.id,
+						currentQuest : `<a href = '#' class='hash-tag hash-tag--sm text-truncate'>
+							${x.currentQuest}
+						</a>`,
+						firstName : x.firstName,
+						lastName : x.lastName,
+						profession : `
+							<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--secondary text-center text-nowrap'>
+								<small>${x.profession.toUpperCase()}</small>
+							</span>
+						`,
+						rarity : x.rarity,
+						owner : `
+							<small>
+								ID : <a href = '#' class='hash-tag hash-tag--sm text-truncate'>${x.owner&&x.owner.id?x.owner.id : ''}</a>
+								</br>
+								NAME : ${x.owner&&x.owner.name?x.owner.name : ''}
+							</small>
+						`
+					}
+				});
+
+				return res.json({
+					draw: req.query.draw,
+					recordsFiltered : output.length,
+					recordsTotal : output.length,
+					data : output
+				});
+			})
+			.catch((err) => {
+				console.log('[ERROR DATATABLE] ', err.message);
+				return res.json({
+					draw: req.query.draw,
+					recordsFiltered : 0,
+					recordsTotal : 0,
+					data : []
+				});
+			});
+	}
+
+	const getPriceToken = async (walletAddress, tokenJewel, jewelUSDPrice, uniswapContract) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let outputToken = await Promise.all(ListToken.map(async (x) => {
+					let tokenAddress = x.address;
+					let tokenContract = new web3.eth.Contract(erc20Abi, tokenAddress);
+					let balance = await tokenContract.methods.balanceOf(walletAddress).call(); // get balance token
+
+					x.balance = (balance)/ 10 ** x.decimals;
+					if (x.address.toLowerCase() == tokenJewel) {
+						x.jewelPrice = 1;
+						x.usdPrice = parseFloat(parseFloat(jewelUSDPrice).toFixed(2))
+					} else {
+						let getAmount = await uniswapContract.methods.getAmountsOut(web3.utils.toBN(Number(1 * (10 ** x.decimals))), [x.address.toLowerCase(), tokenJewel]).call().catch(console.error); // get balance value token jewel
+						let getPrice = parseFloat(parseFloat(parseInt(getAmount[1]) / 10 ** 18).toFixed(4));
+						let usdPrice = getPrice * jewelUSDPrice;
+						
+						x.jewelPrice = getPrice;
+						x.usdPrice = parseFloat(parseFloat(usdPrice).toFixed(2));
+					}
+					
+					// console.log('[BALANCE] ', balance);
+					// console.log('[GET PRICE] ', getPrice);
+					return x;
+				}));
+
+				// console.log('[LIST TOKEN] ', outputToken);
+				return resolve(outputToken);
+			} catch (err) {
+				console.log('[ERROR TOKEN] ', err);
+				return reject(err);
+			}
+		});
+	}
+
 	const getBalance = async (address) => {
 		return new Promise (async (resolve, reject) => {
 			try {
@@ -238,6 +285,45 @@ function Profile () {
 				return reject(err);
 			}
 		})
+	}
+
+	const getHeroes = async (address) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let variables = {
+					owner : address,
+				}
+
+				clientGraphql.query(`
+					query heros($owner : String) {
+						heros(where : { owner : $owner}) {
+							id
+							profession
+							rarity
+							firstName
+							lastName
+							currentQuest
+							owner {
+								id
+								name
+							}
+						}
+					}
+
+				`, variables)
+				.then(async (body) => {
+					let data = body.data;
+					let heros = data.heros;
+					return resolve(heros);
+				})
+				.catch((err) => {
+					console.log(err.message);
+					return reject(err);
+				});
+			} catch (err) {
+				return reject(err);
+			}
+		});
 	}
 }
 
