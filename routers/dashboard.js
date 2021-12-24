@@ -8,9 +8,12 @@ let abiQuest = require('../abi/quest.json')
 const InputDataDecoder = require('ethereum-input-data-decoder');
 const CoinGecko = require('coingecko-api')
 const CoinGeckoClient = new CoinGecko();
+const {
+    nativePrice, latestBlock
+} = require('../lib/getPrice')
 
 function Dashboard() {
-    this.index = async (req,res,next) => {
+    this.index = async (req,res,next) => {        
         let trxData = await TrxModel.find().sort({timestamp: -1}).skip(0).limit(5)
         let questData = await TrxModel.find({actionName: "QUEST"}).sort({timestamp: -1}).skip(0).limit(5)
 
@@ -59,6 +62,11 @@ function Dashboard() {
 
     this.jewelStats = async (req,res,next) => {
         let data = await CoinGeckoClient.coins.fetchMarketChart('defi-kingdoms', {})
+        let jewelPrice = await nativePrice()
+        let block = await latestBlock()
+        data.finalPrice = jewelPrice
+        data.block = block
+
         return res.json(data)
     }
 }

@@ -144,13 +144,15 @@ block script
                 success: (data) => {
                     console.log(data)
                     if (data.code == 200) {
-                        let lastPrice = parseFloat(data.data.prices[0][1]).toFixed(2)
+                        let lastPrice = parseFloat(data.finalPrice).toFixed(2)
                         let lastVolumes = parseFloat(data.data.total_volumes[0][1]).toFixed(2)
                         let lastCap = parseFloat(data.data.market_caps[0][1]).toFixed(2)
+                        let latestBlock = data.block
 
                         $("#jewel-price").text(`$ ${lastPrice}`)
                         $("#jewel-volume").text(Number(lastVolumes).toLocaleString())
                         $("#jewel-cap").text(`$ ${Number(lastCap).toLocaleString()}`)
+                        $("#harmony-block").text(latestBlock)
                     }
                 }
             })
