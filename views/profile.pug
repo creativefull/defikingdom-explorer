@@ -1,4 +1,49 @@
 extends layout
+block style
+	style.
+		.dropbtn {
+			cursor: pointer;
+		}
+
+		#myInput {
+			margin : 5px;
+			box-sizing: border-box;
+			background-image: url('searchicon.png');
+			background-position: 14px 12px;
+			background-repeat: no-repeat;
+			font-size: 13px;
+			padding: 14px 20px 12px 25px;
+			border: none;
+			border-bottom: 1px solid #ddd;
+		}
+
+		#myInput:focus {outline: 3px solid #ddd;}
+
+		.dropdown {
+			position: relative;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			background-color: #f6f6f6;
+			min-width: 100%;
+			overflow: scroll;
+			border: 1px solid #ddd;
+			z-index: 1;
+			padding : 5px;
+		}
+
+		.dropdown-content a {
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.dropdown a:hover {background-color: #ddd;}
+
+		.show {display: block;}
 block content
 	div.container
 		div.row
@@ -13,19 +58,33 @@ block content
 					.card-body
 						div(class = 'row align-items-center')
 							div(class = 'col-md-4 mb-1 mb-md-0') Balance:
-							div.col-md-8 0
-								b .
-								| 036461791163288827 BNB
+							div.col-md-8 
+								span#jewel-price
 						hr
 						div(class = 'row align-items-center')
-							div(class = 'col-md-4 mb-1 mb-md-0') BNB Value:
-							div.col-md-8 $19.18 
-								span.small(tyle = 'position:relative;top:-1px') (@ $526.12/BNB)
+							div(class = 'col-md-4 mb-1 mb-md-0') ONE Value:
+							div.col-md-8
+								span#usd-price
 						hr
 						div(class = 'row align-items-center')
 							div(class = 'col-md-4 mb-1 mb-md-0') Token:
-							div.col-md-8 $19.18 
-								span.small(tyle = 'position:relative;top:-1px') -
+							div.col-md-8 
+								span.small(tyle = 'position:relative;top:-1px')#listContractToken 
+									div.dropdown
+										input#inputToken(class = 'dropbtn form-control form-control-sm' onClick = 'showToken()')
+										div(id="myListToken" class="dropdown-content")
+											input.form-control.form-control-sm(type="text" placeholder="Search.." id="searchToken" onkeyup="filterToken()")
+											//- ul(class = 'list list-unstyled mb-0')
+												li(class = 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1')
+													a(class = 'link-hover d-flex justify-content-between align-items-center' style = 'width : 100%;' href = '#')
+														div
+															div(class = 'd-flex align-items-center')
+																img(class = 'mr-1 mCS_img_loaded' src = 'https://dfk-hv.b-cdn.net/art-assets/items/gaias-tear.png' style = 'width : 15px;')
+																span(class = 'list-name hash-tag text-truncate') MultiVAC (MTV)
+															span(class = 'list-amount link-hover__item hash-tag hash-tag--md text-truncate') 1,085.21737868 MTV
+														div.text-right
+															span(class = 'list-usd-value d-block') $10.61
+															span(class = 'list-usd-rate link-hover__item') @0.01
 
 			div.col-lg-6
 				.card
@@ -40,6 +99,185 @@ block content
 		div.row
 			div.col-lg-12
 				.card
-					.card-header
-						nav(class = 'nav nav-pills nav-secondary')
 					.card-body
+						div(class = 'page-navs bg-white')
+							div.nav-scroller
+								div(class = 'nav nav-tabs nav-line nav-color-secondary d-flex align-items-center justify-contents-center w-100')
+									a(class="nav-link active show" data-toggle="tab" href="#tabTrx") Transaction
+									a(class="nav-link mr-5" data-toggle="tab" href="#tabHeroes") Heroes
+									a(class="nav-link mr-5" data-toggle="tab" href="#tabGarden") Garden
+
+						div(class="tab-content")
+							div(id="tabTrx" class="tab-pane out active")
+								br
+								.row
+									.col-md-12.col-xs-12.col-sm-12
+										.table-responsive
+											table.table.table-hover.display#tableLastTxn(width="100%" cellspacing="0")
+												thead.thead-light
+													tr
+														th Txn Hash
+														//- th Method
+														th Block
+														th Age
+														th From
+														th To
+														th Value
+														th Txn Fee
+												tbody
+								
+							div(id="tabHeroes" class="tab-pane fade")
+								h3 Heroes
+								p Comming Soon.
+							div(id="tabGarden" class="tab-pane fade")
+								h3 Garden
+								p Comming Soon.
+							
+block script
+	script.
+		var tableLastTxn;
+		let address = '#{address}';
+
+		function showToken() {
+			document.getElementById("myListToken").classList.toggle("show");
+		}
+
+		function filterToken() {
+			var input, filter, ul, li, a, i, txtName, txtSymbol;
+			input = document.getElementById("searchToken");
+			filter = input.value.toUpperCase();
+			div = document.getElementById("myListToken");
+			li = div.getElementsByTagName("li");
+			a = div.getElementsByTagName("a");
+			for (i = 0; i < li.length; i++) {
+				txtName = $(li[i]).attr('data-name');
+				txtSymbol = $(li[i]).attr('data-symbol');
+
+				if ((txtSymbol.toUpperCase().indexOf(filter) > -1) || (txtName.toUpperCase().indexOf(filter) > -1)) {
+					console.log('SHOW');
+					$(li[i]).show();
+				} else {
+					$(li[i]).hide();
+					console.log('HIDE');
+				}
+			}
+
+			//- for (i = 0; i < a.length; i++) {
+			//- 	txtValue = a[i].textContent || a[i].innerText;
+			//- 	if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			//- 		a[i].style.display = "";
+			//- 	} else {
+			//- 		a[i].style.display = "none";
+			//- 	}
+			//- }
+		}
+
+		$(function (){
+			$('.nameMethod').tooltip();
+
+			$.ajax({
+				url: `/address/${address}/stats`,
+				beforeSend: () => {
+				},
+				success: (msg) => {
+					if (msg.status == 200) {
+						let data = msg.data;
+						let tokens = data.tokens;
+						$("#jewel-price").text(`${data.jewelPrice} ONE`);
+						$("#usd-price").text(`$ ${data.usdPrice}`);
+
+						let parentList = $('<ul/>',{
+							class : 'list list-unstyled mb-0'
+						});
+						let balanceUsd = 0;
+
+						tokens.forEach(function (t, index){
+							if (index == 0) balanceUsd = t.usdPrice;
+							if (t.balance>0 && index >0) {
+								let listChild = $('<li/>', {
+									class : 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1',
+									'data-name' : t.name,
+									'data-symbol' : t.symbol,
+								});
+						
+								//- DIV LEFT
+								let divLeft = $('<div/>');
+								let divImg = $('<div/>',{
+									class : 'd-flex align-items-center'
+								}).append(`
+									<img class = 'mr-1 mCS_img_loaded' src = '${t.logoURI}' style = 'width : 15px;'>
+									<span class = 'list-name hash-tag text-truncate'>${t.name} (${t.symbol})</span>
+								`);
+								let spanBalance = $('<span/>',{
+									class : 'list-amount link-hover__item hash-tag hash-tag--md text-truncate',
+									text : `${t.balance} ${t.symbol}`
+								});
+								divLeft.append(divImg);
+								divLeft.append(spanBalance);
+
+								//- DIV RIGHT
+								let divRight = $('<div/>',{
+									class : 'text-right'
+								}).append(`
+									<span class = 'list-usd-value d-block'>$ ${t.usdPrice}</span>
+									<span class = 'list-usd-rate link-hover__item'>@${t.jewelPrice}</span>
+								`);
+
+								let aLink = $('<a/>',{
+									class : 'link-hover d-flex justify-content-between align-items-center',
+									style : 'width : 100%;',
+									href : `/token/${t.address}?a=${address}`,
+									target : '__blank'
+								});
+								aLink.append(divLeft);
+								aLink.append(divRight);
+
+								listChild.append(aLink);
+								parentList.append(listChild);
+							}
+						});
+						$('input#inputToken').val(`$ ${balanceUsd}`);
+						$('#myListToken').append(parentList);
+						//- $('#myListToken').css('height', '400px');
+						//- $('#listContractToken').html(listContractToken);	
+					}
+				}
+			});
+
+			tableLastTxn = $('#tableLastTxn').DataTable({
+				serverSide: false,
+				"pageLength":  50,
+				searching : false,
+				"autoWidth" : true,
+				fixedColumns: true,
+				ajax : `/address/${address}/dataTable`,
+				responsive: true,
+				lengthChange: false,
+				columns : [
+					{
+						"data" : "hash",
+					},{
+						"data" : "blockNumber",
+					},{
+						"data" : "age",
+					},{
+						"data" : "from",
+					},{
+						"data" : "to",
+					},{
+						"data" : "value",
+					},{
+						"data" : "txn_fee",
+					}
+				],
+				columnDefs : [
+					{ width: "10%", targets: 0 },
+					{ width: "5%", targets: 1 },
+					{ width: "5%", targets: 2 },
+					{ width: "10%", targets: 3 },
+					{ width: "10%", targets: 4 },
+					{ width: "3%", targets: 5 },
+					{ width: "5%", targets: 6 },
+				],
+			});
+		});

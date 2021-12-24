@@ -1,0 +1,2 @@
+MONGO_URI=mongodb://103.55.38.120:37027/defikingdoms 
+PORT=3070
