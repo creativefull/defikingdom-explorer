@@ -2,10 +2,10 @@ const erc20Abi = require('../abi/erc20.json');
 const ListToken = require('../config/token.json')
 const uniswapAbi = require('../abi/router.json')
 const {abis} = require('../miners/abis');
+let abiQuest = require('../abi/quest.json')
 
 const Web3 = require('web3');
 const web3 = new Web3(HMY_RPC_URL);
-// const {Account} = require('@harmony-js/account');
 const CoinGecko = require('coingecko-api')
 const async = require('async');
 const moment = require('moment');
@@ -142,28 +142,59 @@ function Profile () {
 		let address = req.params.address;
 		getHeroes(address)
 			.then(async (heros) => {
+				let decoder = new InputDataDecoder(abiQuest);
 				let output = heros.map((x) => {
+					if (x.currentQuest.indexOf('0x000000') === -1 ) {
+						let result = decoder.decodeData(x.currentQuest);
+						let questId = '0x' + x.inputs[1]
 
+						if (questId.toLowerCase() == '0x3132c76acf2217646fb8391918d28a16bd8a8ef4') {
+							// x.currentQuest = 'FOREGING'
+							x.questName = `
+								<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--danger text-center text-nowrap'>
+									<small>FOREGING</small>
+								</span>
+							`;
+						} else if (questId.toLowerCase() == '0xe259e8386d38467f0e7ffedb69c3c9c935dfaefc') {
+							x.questName = `
+								<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--danger text-center text-nowrap'>
+									<small>FISHING</small>
+								</span>
+							`;
+						} else {
+							x.questName = '-'
+						}
+					} else {
+							x.questName = '-'
+					}
+
+					x.rarityName = x.rarity==0? `Common` : x.rarity==1 ? 'Uncommon' : x.rarity==2 ? 'Rare' : x.rarity==3 ? 'Legendary' : 'Mythic'
 					return {
-						id : x.id,
-						currentQuest : `<a href = '#' class='hash-tag hash-tag--sm text-truncate'>
-							${x.currentQuest}
-						</a>`,
-						firstName : x.firstName,
-						lastName : x.lastName,
+						id : `
+							<a href = '/hero/detail?id=${x.id}' class='hash-tag hash-tag--sm text-truncate' target = '__blank'>
+								${x.id}
+							</a>
+						`,
 						profession : `
 							<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--secondary text-center text-nowrap'>
 								<small>${x.profession.toUpperCase()}</small>
 							</span>
 						`,
-						rarity : x.rarity,
+						currentQuest : x.questName,
+						rarity : `
+							<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--info text-center text-nowrap'>
+								${x.rarityName}
+							</span>
+						`,
 						owner : `
 							<small>
 								ID : <a href = '#' class='hash-tag hash-tag--sm text-truncate'>${x.owner&&x.owner.id?x.owner.id : ''}</a>
 								</br>
 								NAME : ${x.owner&&x.owner.name?x.owner.name : ''}
 							</small>
-						`
+						`,
+						level : x.level,
+						staminaFullAt : moment.unix(x.staminaFullAt).fromNow()
 					}
 				});
 
@@ -298,15 +329,23 @@ function Profile () {
 					query heros($owner : String) {
 						heros(where : { owner : $owner}) {
 							id
+							numberId
 							profession
 							rarity
-							firstName
-							lastName
 							currentQuest
 							owner {
 								id
 								name
 							}
+							mp
+							xp
+							sp
+							hp
+							level
+							stamina
+							staminaFullAt
+							summons
+							maxSummons
 						}
 					}
 
