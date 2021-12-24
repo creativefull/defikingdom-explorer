@@ -3,8 +3,9 @@ const ListToken = require('../config/token.json')
 const uniswapAbi = require('../abi/router.json')
 const {abis} = require('../miners/abis');
 
-const Web3 = require('web3')
+const Web3 = require('web3');
 const web3 = new Web3(HMY_RPC_URL);
+// const {Account} = require('@harmony-js/account');
 const CoinGecko = require('coingecko-api')
 const async = require('async');
 const moment = require('moment');
@@ -17,7 +18,7 @@ const perBlock = 2 // 2 seconds default harmony
 function Profile () {
 
 	this.address = async (req, res, next) => {
-		let address = req.params.address
+		let address = req.params.address;
 		return res.render('profile',{
 			title : `Defi Kingdoms - Address ${address}`,
 			address : address,
