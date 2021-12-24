@@ -168,22 +168,11 @@ block script
 				txtSymbol = $(li[i]).attr('data-symbol');
 
 				if ((txtSymbol.toUpperCase().indexOf(filter) > -1) || (txtName.toUpperCase().indexOf(filter) > -1)) {
-					console.log('SHOW');
 					$(li[i]).show();
 				} else {
 					$(li[i]).hide();
-					console.log('HIDE');
 				}
 			}
-
-			//- for (i = 0; i < a.length; i++) {
-			//- 	txtValue = a[i].textContent || a[i].innerText;
-			//- 	if (txtValue.toUpperCase().indexOf(filter) > -1) {
-			//- 		a[i].style.display = "";
-			//- 	} else {
-			//- 		a[i].style.display = "none";
-			//- 	}
-			//- }
 		}
 
 		$(function (){

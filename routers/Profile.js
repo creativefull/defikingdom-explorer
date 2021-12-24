@@ -12,7 +12,6 @@ const moment = require('moment');
 const _ = require('underscore');
 const request = require('request');
 const CoinGeckoClient = new CoinGecko();
-const InputDataDecoder = require('ethereum-input-data-decoder');
 const perBlock = 2 // 2 seconds default harmony
 
 function Profile () {
@@ -142,30 +141,21 @@ function Profile () {
 		let address = req.params.address;
 		getHeroes(address)
 			.then(async (heros) => {
-				let decoder = new InputDataDecoder(abiQuest);
 				let output = heros.map((x) => {
-					if (x.currentQuest.indexOf('0x000000') === -1 ) {
-						let result = decoder.decodeData(x.currentQuest);
-						let questId = '0x' + x.inputs[1]
-
-						if (questId.toLowerCase() == '0x3132c76acf2217646fb8391918d28a16bd8a8ef4') {
-							// x.currentQuest = 'FOREGING'
-							x.questName = `
-								<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--danger text-center text-nowrap'>
-									<small>FOREGING</small>
-								</span>
-							`;
-						} else if (questId.toLowerCase() == '0xe259e8386d38467f0e7ffedb69c3c9c935dfaefc') {
-							x.questName = `
-								<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--danger text-center text-nowrap'>
-									<small>FISHING</small>
-								</span>
-							`;
-						} else {
-							x.questName = '-'
-						}
+					if (x.currentQuest.toLowerCase() == '0x3132c76acf2217646fb8391918d28a16bd8a8ef4') {
+						x.questName = `
+							<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--danger text-center text-nowrap'>
+								<small>FOREGING</small>
+							</span>
+						`;
+					} else if (x.currentQuest.toLowerCase() == '0xe259e8386d38467f0e7ffedb69c3c9c935dfaefc') {
+						x.questName = `
+							<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--danger text-center text-nowrap'>
+								<small>FISHING</small>
+							</span>
+						`;
 					} else {
-							x.questName = '-'
+						x.questName = '-'
 					}
 
 					x.rarityName = x.rarity==0? `Common` : x.rarity==1 ? 'Uncommon' : x.rarity==2 ? 'Rare' : x.rarity==3 ? 'Legendary' : 'Mythic'
@@ -340,7 +330,6 @@ function Profile () {
 							mp
 							xp
 							sp
-							hp
 							level
 							stamina
 							staminaFullAt
