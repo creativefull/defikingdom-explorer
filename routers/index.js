@@ -6,7 +6,7 @@ const TransactionHandler= require('./Transaction'), Transaction = new Transactio
 
 const TxnHandler = require('./txn'), Txn = new TxnHandler()
 const TokenHandler = require('./token'), Token = new TokenHandler()
-const HeroesHandler = require('./Heroes'), Heroes = new HeroesHandler();
+const HeroesHandler = require('./heroes'), Heroes = new HeroesHandler();
 
 app.get('/', Dashboard.index)
 app.get('/jewel-stats', Dashboard.jewelStats)
