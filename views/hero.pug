@@ -27,5 +27,31 @@ block script
 		var tableHeroes;
 
 		$(function (){
-
+			tableHeroes = $('#tableHeroes').DataTable({
+				serverSide: false,
+				"pageLength":  50,
+				searching : false,
+				"autoWidth" : true,
+				fixedColumns: true,
+				ajax : `/hero/list/dataTable`,
+				responsive: true,
+				lengthChange: false,
+				columns : [
+					{
+						"data" : "id",
+					},{
+						"data" : "owner",
+					},{
+						"data" : "profession",
+					},{
+						"data" : "currentQuest",
+					},{
+						"data" : "rarity",
+					},{
+						"data" : "level"
+					},{
+						"data" : "staminaFullAt"
+					}
+				],
+			});
 		});

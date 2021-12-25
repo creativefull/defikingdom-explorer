@@ -155,13 +155,14 @@ function Profile () {
 							</span>
 						`;
 					} else {
-						x.questName = '-'
+						x.questName = '';
+
 					}
 
 					x.rarityName = x.rarity==0? `Common` : x.rarity==1 ? 'Uncommon' : x.rarity==2 ? 'Rare' : x.rarity==3 ? 'Legendary' : 'Mythic'
 					return {
 						id : `
-							<a href = '/hero/detail?id=${x.id}' class='hash-tag hash-tag--sm text-truncate' target = '__blank'>
+							<a href = '/hero/${x.id}' class='hash-tag hash-tag--sm text-truncate' target = '__blank'>
 								${x.id}
 							</a>
 						`,
@@ -177,11 +178,11 @@ function Profile () {
 							</span>
 						`,
 						owner : `
-							<small>
+							<div>
 								ID : <a href = '#' class='hash-tag hash-tag--sm text-truncate'>${x.owner&&x.owner.id?x.owner.id : ''}</a>
 								</br>
 								NAME : ${x.owner&&x.owner.name?x.owner.name : ''}
-							</small>
+							</div>
 						`,
 						level : x.level,
 						staminaFullAt : moment.unix(x.staminaFullAt).fromNow()

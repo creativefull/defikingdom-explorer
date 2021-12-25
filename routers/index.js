@@ -26,7 +26,8 @@ app.get('/address/:address/stats', Profile.stats);
 app.get('/address/:address/trx/dataTable', Profile.dataTableTransaction);
 app.get('/address/:address/hero/dataTable', Profile.dataTableHeroes);
 
-// app.get('/heroes/list', Heroes.index);
-// app.get('/heroes/list/dataTable', Heroes.dataTable);
+app.get('/hero/list', Heroes.index);
+app.get('/hero/list/dataTable', Heroes.dataTable);
+app.get('/hero/:heroID', Heroes.heroDetail);
 
 module.exports = exports = app
