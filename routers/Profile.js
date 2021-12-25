@@ -6,13 +6,12 @@ let abiQuest = require('../abi/quest.json')
 
 const Web3 = require('web3');
 const web3 = new Web3(HMY_RPC_URL);
-const CoinGecko = require('coingecko-api')
 const async = require('async');
 const moment = require('moment');
 const _ = require('underscore');
 const request = require('request');
-const CoinGeckoClient = new CoinGecko();
-const perBlock = 2 // 2 seconds default harmony
+const { nativePrice } = require('../lib/getPrice');
+const TrxModel = require('../models/transaksi')
 
 function Profile () {
 
@@ -29,11 +28,7 @@ function Profile () {
 		
 		let uniswapContract = new web3.eth.Contract(uniswapAbi, '0x24ad62502d1c652cc7684081169d04896ac20f30')
 		let tokenJewel = '0x72Cb10C6bfA5624dD07Ef608027E366bd690048F'.toLowerCase();
-		let jewelPriceCG = await CoinGeckoClient.coins.fetchMarketChart('defi-kingdoms', {})
-		let jewelUSDPrice = 0
-		if (jewelPriceCG.code == 200) {
-			jewelUSDPrice = jewelPriceCG.data.prices[jewelPriceCG.data.prices.length - 1][1]
-		}
+		let jewelUSDPrice = await nativePrice()
 
 		// await getPriceToken(address);
 		async.parallel({
@@ -59,6 +54,7 @@ function Profile () {
 						})
 					})
 					.catch((err) => {
+						console.err(err)
 						return callback(err.message, null);
 					});
 			}
@@ -80,11 +76,28 @@ function Profile () {
 
 	this.dataTableTransaction = async (req, res, next) => {
 		let address = req.params.address;
-		getLastTransactions(address)
-			.then((rows) => {
-				let output = rows.trx.map((x) => {
-					x.timestamp = moment.unix(x.timestamp).fromNow();
-					x.txn_fee = (x.gas * parseInt(x.gasPrice)) / 10 ** 18;
+		let where = {
+			$or: [{
+				from: new RegExp(address, 'gi')
+			}, {
+				to: new RegExp(address, 'gi')
+			}]
+		}
+
+		TrxModel.find(where)
+			.sort({timestamp: -1})
+			.skip(parseInt(req.query.start))
+			.limit(parseInt(req.query.length))
+			.then(async (result) => {
+				let output = result.map((x, idx) => {
+					let timestamp = moment.unix(x.timestamp).fromNow();
+					let txn_fee = (x.gas * parseInt(x.gasPrice)) / 10 ** 18;
+					let amount = 0
+					x.tokenTransfers?.forEach((t) => {
+						if (t.symbol == 'JEWEL') {
+							amount += t.amount
+						}
+					})
 
 					abis.map((a) => a.address = a.address.toLowerCase())
 					/* CHECK ADDRESS FROM / TO */
@@ -97,36 +110,45 @@ function Profile () {
 					if (checkTo) {
 						x.to = checkTo.type
 					}
-					// END
+
 
 					return {
-						_id : x.hash,
+						_id : x._id,
 						hash : `
 							<a href = '/tx/${x.hash}' class='hash-tag hash-tag--sm text-truncate'>
 							${x.hash}
 							</a>
 						`,
+						method : `
+							<span class = 'u-label u-label--xs u-label--info rounded text-dark text-center nameMethod' style='min-width:68px;' data-toggle="tooltip" data-placement="top" data-original-title = "${x.method}" title="${x.method}">
+								${x.method?x.method:''}
+							</span>
+						`,
 						blockNumber : x.blockNumber,
-						age : x.timestamp,
+						age : timestamp,
 						from : `
 							<a href = '/address/${x.from}' class='hash-tag hash-tag--sm text-truncate'>${x.from}</a>
 						`,
 						to : `
-							<a href = '#' class='hash-tag hash-tag--sm text-truncate'>${x.to}</a>
+							<a href = '/address/${x.to}' class='hash-tag hash-tag--sm text-truncate'>${x.to}</a>
 						`,
-						value : `${parseFloat(x.value).toFixed(2)} JEWEL`,
-						txn_fee : `<small class='small text-secondary'>${parseFloat(x.txn_fee).toFixed(5)}</small>`,
+						value : `${parseFloat(amount).toFixed(2)} JEWEL`,
+						txn_fee : `<small class='small text-secondary'>${parseFloat(txn_fee).toFixed(5)}</small>`,
 					}
 				});
 
-				return res.json({
-					draw: req.query.draw,
-					recordsFiltered : output.length,
-					recordsTotal : output.length,
-					data : output
+				// console.log('[OUTPUT] ', output);
+				TrxModel.countDocuments(where).then((total) => {
+					return res.json({
+						draw: req.query.draw,
+						recordsFiltered : total,
+						recordsTotal : total,
+						data : output
+					});
 				});
 			})
-			.catch((err) =>{
+			.catch((err) => {
+				console.error(err)
 				console.log('[ERROR DATATABLE] ', err.message);
 				return res.json({
 					draw: req.query.draw,
@@ -156,11 +178,12 @@ function Profile () {
 						`;
 					} else {
 						x.questName = '';
-
 					}
 
 					x.rarityName = x.rarity==0? `Common` : x.rarity==1 ? 'Uncommon' : x.rarity==2 ? 'Rare' : x.rarity==3 ? 'Legendary' : 'Mythic'
+					colorRarity = ['default','success','info','warning','purple']
 					return {
+						...x,
 						id : `
 							<a href = '/hero/${x.id}' class='hash-tag hash-tag--sm text-truncate' target = '__blank'>
 								${x.id}
@@ -173,18 +196,12 @@ function Profile () {
 						`,
 						currentQuest : x.questName,
 						rarity : `
-							<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--info text-center text-nowrap'>
+							<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--${colorRarity[x.rarity]} text-center text-nowrap'>
 								${x.rarityName}
 							</span>
 						`,
-						owner : `
-							<div>
-								ID : <a href = '#' class='hash-tag hash-tag--sm text-truncate'>${x.owner&&x.owner.id?x.owner.id : ''}</a>
-								</br>
-								NAME : ${x.owner&&x.owner.name?x.owner.name : ''}
-							</div>
-						`,
 						level : x.level,
+						summonLeft: x.maxSummons - x.summons,
 						staminaFullAt : moment.unix(x.staminaFullAt).fromNow()
 					}
 				});
@@ -245,68 +262,15 @@ function Profile () {
 	const getBalance = async (address) => {
 		return new Promise (async (resolve, reject) => {
 			try {
-				let options = {
-					uri: HMY_RPC_URL,
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						"id": "1",
-						"jsonrpc": "2.0",
-						"method": "hmyv2_getBalance",
-						"params": [
-							address,
-						]
-					}),
-				}
-
-				request(options, async (err, response, body) => {
-					if (err) return reject({status : 500, message : 'Internal Server Error'});
-					let hasil = JSON.parse(body);
-					let balance = hasil.result/1e18;
-					return resolve({status : 200, balance : balance});
-				});
+				let erc20Contract = new web3.eth.Contract(erc20Abi, '0x72Cb10C6bfA5624dD07Ef608027E366bd690048F')
+				let balance = await erc20Contract.methods.balanceOf(address).call()
+				return resolve({
+					balance: parseFloat(parseFloat(parseInt(balance) / 10 ** 18).toFixed(2))
+				})
 			} catch (err) {
 				return reject({status : 500, message : err.message});
 			}
 		});
-	}
-
-	const getLastTransactions = async (address) => {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let options = {
-					uri: HMY_RPC_URL,
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						"jsonrpc": "2.0",
-						"method": "hmyv2_getTransactionsHistory",
-						"params": [{
-							"address": address,
-							"pageIndex": 0,
-							"pageSize": 100,
-							"fullTx": true,
-							"txType": "ALL",
-							"order": "DESC"
-						}],
-						"id": 1
-					}),
-				}
-
-				request(options, async (err, response, body) => {
-					if (err) return reject({status : 500, message : 'Internal Server Error'});
-					let hasil = JSON.parse(body);
-					let trx = hasil.result;
-					return resolve({status : 200, trx : trx.transactions});
-				});
-			} catch (err) {
-				return reject(err);
-			}
-		})
 	}
 
 	const getHeroes = async (address) => {
@@ -315,10 +279,9 @@ function Profile () {
 				let variables = {
 					owner : address,
 				}
-
-				clientGraphql.query(`
-					query heros($owner : String) {
-						heros(where : { owner : $owner}) {
+				let query = `
+					query {
+						heros(where : { owner : "${address.toLowerCase()}"}) {
 							id
 							numberId
 							profession
@@ -336,10 +299,14 @@ function Profile () {
 							staminaFullAt
 							summons
 							maxSummons
+							generation
+							mainClass
+							subClass
 						}
 					}
+				`
 
-				`, variables)
+				clientGraphql.query(query)
 				.then(async (body) => {
 					let data = body.data;
 					let heros = data.heros;

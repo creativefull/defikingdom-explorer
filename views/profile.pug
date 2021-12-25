@@ -45,11 +45,12 @@ block style
 
 		.show {display: block;}
 block content
-	div.container
+	.container.mt-2
 		div.row
 			div.col-lg-12
 				h5.page-title Address 
-					span(style = 'white-space : normal; color : #77838f!important; font-size : 20px;') #{address}
+					span(style = 'white-space : normal; color : #77838f!important; font-size : 20px;') #{address.toLowerCase()}
+	div.container
 		div.row
 			div.col-lg-6
 				.card
@@ -62,7 +63,7 @@ block content
 								span#jewel-price
 						hr
 						div(class = 'row align-items-center')
-							div(class = 'col-md-4 mb-1 mb-md-0') ONE Value:
+							div(class = 'col-md-4 mb-1 mb-md-0') JEWEL Value:
 							div.col-md-8
 								span#usd-price
 						hr
@@ -74,18 +75,6 @@ block content
 										input#inputToken(class = 'dropbtn form-control form-control-sm' onClick = 'showToken()')
 										div(id="myListToken" class="dropdown-content")
 											input.form-control.form-control-sm(type="text" placeholder="Search.." id="searchToken" onkeyup="filterToken()")
-											//- ul(class = 'list list-unstyled mb-0')
-												li(class = 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1')
-													a(class = 'link-hover d-flex justify-content-between align-items-center' style = 'width : 100%;' href = '#')
-														div
-															div(class = 'd-flex align-items-center')
-																img(class = 'mr-1 mCS_img_loaded' src = 'https://dfk-hv.b-cdn.net/art-assets/items/gaias-tear.png' style = 'width : 15px;')
-																span(class = 'list-name hash-tag text-truncate') MultiVAC (MTV)
-															span(class = 'list-amount link-hover__item hash-tag hash-tag--md text-truncate') 1,085.21737868 MTV
-														div.text-right
-															span(class = 'list-usd-value d-block') $10.61
-															span(class = 'list-usd-rate link-hover__item') @0.01
-
 			div.col-lg-6
 				.card
 					.card-header
@@ -103,7 +92,7 @@ block content
 						div(class = 'page-navs bg-white')
 							div.nav-scroller
 								div(class = 'nav nav-tabs nav-line nav-color-secondary d-flex align-items-center justify-contents-center w-100')
-									a(class="nav-link active show" data-toggle="tab" href="#tabTrx") Transaction
+									a(class="nav-link active show mr-5" data-toggle="tab" href="#tabTrx") Transaction
 									a(class="nav-link mr-5" data-toggle="tab" href="#tabHeroes") Heroes
 									a(class="nav-link mr-5" data-toggle="tab" href="#tabGarden") Garden
 
@@ -117,13 +106,12 @@ block content
 												thead.thead-light
 													tr
 														th Txn Hash
-														//- th Method
+														th Method
 														th Block
 														th Age
 														th From
 														th To
 														th Value
-														th Txn Fee
 												tbody
 								
 							div(id="tabHeroes" class="tab-pane fade")
@@ -135,12 +123,16 @@ block content
 												thead.thead-light
 													tr
 														th ID
-														th Owner
+														th Gen
+														th Lvl
+														th Rarity
+														th Class
 														th Profession
 														th Quest
-														th Rarity
-														th Level
-														th Stamina Full At
+														th Sum Left
+														th Stam
+														th XP
+														th Stam Full At
 												tbody
 							div(id="tabGarden" class="tab-pane fade")
 								h3 Garden
@@ -186,17 +178,16 @@ block script
 					if (msg.status == 200) {
 						let data = msg.data;
 						let tokens = data.tokens;
-						$("#jewel-price").text(`${data.jewelPrice} ONE`);
+						$("#jewel-price").text(`${data.jewelPrice} JEWEL`);
 						$("#usd-price").text(`$ ${data.usdPrice}`);
 
 						let parentList = $('<ul/>',{
 							class : 'list list-unstyled mb-0'
 						});
 						let balanceUsd = 0;
-
 						tokens.forEach(function (t, index){
-							if (index == 0) balanceUsd = t.usdPrice;
 							if (t.balance>0 && index >0) {
+								balanceUsd += t.usdPrice
 								let listChild = $('<li/>', {
 									class : 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1',
 									'data-name' : t.name,
@@ -239,7 +230,7 @@ block script
 								parentList.append(listChild);
 							}
 						});
-						$('input#inputToken').val(`$ ${balanceUsd}`);
+						$('input#inputToken').val(`$ ${parseFloat(balanceUsd).toFixed(2)}`);
 						$('#myListToken').append(parentList);
 						//- $('#myListToken').css('height', '400px');
 						//- $('#listContractToken').html(listContractToken);	
@@ -247,9 +238,9 @@ block script
 				}
 			});
 
-			//- DATATABLE TRASCTION
+			//- DATATABLE TRANSACTIONS
 			tableLastTxn = $('#tableLastTxn').DataTable({
-				serverSide: false,
+				serverSide: true,
 				"pageLength":  50,
 				searching : false,
 				"autoWidth" : true,
@@ -261,6 +252,8 @@ block script
 					{
 						"data" : "hash",
 					},{
+						"data" : "method",
+					},{
 						"data" : "blockNumber",
 					},{
 						"data" : "age",
@@ -270,25 +263,23 @@ block script
 						"data" : "to",
 					},{
 						"data" : "value",
-					},{
-						"data" : "txn_fee",
 					}
 				],
 				columnDefs : [
 					{ width: "10%", targets: 0 },
 					{ width: "5%", targets: 1 },
 					{ width: "5%", targets: 2 },
-					{ width: "10%", targets: 3 },
+					{ width: "5%", targets: 3 },
 					{ width: "10%", targets: 4 },
-					{ width: "3%", targets: 5 },
-					{ width: "5%", targets: 6 },
+					{ width: "10%", targets: 5 },
+					{ width: "3%", targets: 6 }
 				],
 			});
 
 			//- DATATABLE HEROES
 			tableHeroes = $('#tableMyHeroes').DataTable({
 				serverSide: false,
-				"pageLength":  50,
+				"pageLength":  10,
 				searching : false,
 				"autoWidth" : true,
 				fixedColumns: true,
@@ -299,17 +290,25 @@ block script
 					{
 						"data" : "id",
 					},{
-						"data" : "owner",
+						"data" : "generation",
 					},{
-						"data" : "profession",
-					},{
-						"data" : "currentQuest",
+						"data" : "level",
 					},{
 						"data" : "rarity",
 					},{
-						"data" : "level"
+						"data" : "mainClass",
 					},{
-						"data" : "staminaFullAt"
+						"data" : "profession"
+					},{
+						"data" : "currentQuest"
+					},{
+						"data": "summonLeft"
+					},{
+						"data": "stamina"
+					},{
+						"data": "xp"
+					},{
+						"data": "staminaFullAt"
 					}
 				],
 			});

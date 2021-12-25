@@ -10,9 +10,16 @@ const clientGraphql = require('graphql-client')({
     'Content-Type': 'application/json'
   }
 });
+const trxGraphql = require('graphql-client')({
+  url: 'http://graph3.defikingdoms.com/subgraphs/name/defikingdoms/dex',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
 
 global.HMY_RPC_URL = HMY_RPC_URL;
 global.clientGraphql = clientGraphql;
+global.trxGraphql = trxGraphql;
 mongoose
   .connect(
     process.env.MONGO_URI || 'mongodb://localhost:27017/defikingdoms',
