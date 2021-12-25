@@ -11,7 +11,7 @@ function Heroes() {
 	}
 
 	this.dataTable = async (req, res, next) => {
-		getHeroes({})
+		getHeroes({owner : ''})
 			.then(async (heros) => {
 				let decoder = new InputDataDecoder(abiQuest);
 				let output = heros.map((x) => {
@@ -86,10 +86,6 @@ function Heroes() {
 	const getHeroes = async (options) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let variables = {
-					owner : ''
-				}
-
 				clientGraphql.query(`
 					query heros($owner : String) {
 						heros(where : {}) {
@@ -114,7 +110,7 @@ function Heroes() {
 						}
 					}
 
-				`, variables)
+				`, options)
 				.then(async (body) => {
 					let data = body.data;
 					let heros = data.heros;
