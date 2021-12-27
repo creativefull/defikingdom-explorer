@@ -76,22 +76,22 @@ block content
 						div(class = 'row align-items-center')
 							div(class = 'col-md-6 mb-1 mb-md-0') Mining :
 							div.col-md-2
-								span 0
+								span #{heros?heros.mining:0}
 						hr
 						div(class = 'row align-items-center')
 							div(class = 'col-md-6 mb-1 mb-md-0') Fishing :
 							div.col-md-2
-								span 0
+								span #{heros?heros.fishing:0}
 						hr
 						div(class = 'row align-items-center')
 							div(class = 'col-md-6 mb-1 mb-md-0') Gardening :
 							div.col-md-2
-								span 0
+								span #{heros?heros.gardening:0}
 						hr
 						div(class = 'row align-items-center')
 							div(class = 'col-md-6 mb-1 mb-md-0') Foraging :
 							div.col-md-2
-								span 0
+								span #{heros?heros.foraging:0}
 
 			div.col-lg-4
 				.card
@@ -100,16 +100,18 @@ block content
 					.card-body
 						div(class = 'row align-items-center')
 							div(class = 'col-md-6 mb-1 mb-md-0') Main Class :
-							div.col-md-2
-								span 0
+							div.col-md-6
+								span #{heros?heros.mainClass:''}
 						hr
 						div(class = 'row align-items-center')
 							div(class = 'col-md-6 mb-1 mb-md-0') Sub class :
-							div.col-md-2
-								span 0
+							div.col-md-6
+								span #{heros?heros.subClass:''}
 						hr
 						div(class = 'row align-items-center')
 							div(class = 'col-md-6 mb-1 mb-md-0') Profession :
-							div.col-md-2
-								span 0
+							div.col-md-6
+								span(style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--primary text-center text-nowrap') 
+									small #{heros?heros.profession.toUpperCase():''}
+
 	script.

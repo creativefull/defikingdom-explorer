@@ -110,6 +110,10 @@ function Heroes() {
 					luck
 					endurance
 					dexterity
+					mining
+					fishing
+					foraging
+					gardening
 				}
 			}
 		`;
