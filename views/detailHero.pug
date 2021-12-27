@@ -60,6 +60,13 @@ block content
 							div(class = 'col-md-3 mb-1 mb-md-0') LCK :
 							div.col-md-3
 								span #{heros?heros.luck:0}
+					.card-footer
+						div(class = 'row align-items-center')
+							div(class = 'col-md-12 mb-1 mb-md-1') #{heros?heros.maxSummons:0} Summons left
+						div(class = 'row align-items-center')
+							div(class = 'col-md-12 mb-1 mb-md-1') Level #{heros?heros.level:1}
+						div(class = 'row align-items-center')
+							div(class = 'col-md-12 mb-1 mb-md-1') #{heros?heros.xp:1} XP
 
 			div.col-lg-4
 				.card
