@@ -28,11 +28,13 @@ function Heroes() {
 							</span>
 						`;
 					} else {
-						x.questName = ''
+						x.questName = '';
 					}
 
 					x.rarityName = x.rarity==0? `Common` : x.rarity==1 ? 'Uncommon' : x.rarity==2 ? 'Rare' : x.rarity==3 ? 'Legendary' : 'Mythic'
+					colorRarity = ['default','success','info','warning','purple'];
 					return {
+						...x,
 						id : `
 							<a href = '/hero/${x.id}' class='hash-tag hash-tag--sm text-truncate' target = '__blank'>
 								${x.id}
@@ -45,18 +47,12 @@ function Heroes() {
 						`,
 						currentQuest : x.questName,
 						rarity : `
-							<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--info text-center text-nowrap'>
+							<span style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--${colorRarity[x.rarity]} text-center text-nowrap'>
 								${x.rarityName}
 							</span>
 						`,
-						owner : `
-							<div>
-								ID : <a href = '/address/${x.owner&&x.owner.id?x.owner.id : ''}' class='hash-tag hash-tag--sm text-truncate'>${x.owner&&x.owner.id?x.owner.id : ''}</a>
-								</br>
-								NAME : ${x.owner&&x.owner.name?x.owner.name : ''}
-							</div>
-						`,
 						level : x.level,
+						summonLeft: x.maxSummons - x.summons,
 						staminaFullAt : moment.unix(x.staminaFullAt).fromNow()
 					}
 				});
@@ -101,12 +97,14 @@ function Heroes() {
 							mp
 							xp
 							sp
-							hp
 							level
 							stamina
 							staminaFullAt
 							summons
 							maxSummons
+							generation
+							mainClass
+							subClass
 						}
 					}
 

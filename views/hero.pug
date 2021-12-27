@@ -14,12 +14,16 @@ block content
 									thead.thead-light
 										tr
 											th ID
-											th Owner
+											th Gen
+											th Lvl
+											th Rarity
+											th Class
 											th Profession
 											th Quest
-											th Rarity
-											th Level
-											th Stamina Full At
+											th Sum Left
+											th Stam
+											th XP
+											th Stam Full At
 									tbody
 
 block script
@@ -29,7 +33,7 @@ block script
 		$(function (){
 			tableHeroes = $('#tableHeroes').DataTable({
 				serverSide: false,
-				"pageLength":  50,
+				"pageLength":  10,
 				searching : false,
 				"autoWidth" : true,
 				fixedColumns: true,
@@ -40,17 +44,25 @@ block script
 					{
 						"data" : "id",
 					},{
-						"data" : "owner",
+						"data" : "generation",
 					},{
-						"data" : "profession",
-					},{
-						"data" : "currentQuest",
+						"data" : "level",
 					},{
 						"data" : "rarity",
 					},{
-						"data" : "level"
+						"data" : "mainClass",
 					},{
-						"data" : "staminaFullAt"
+						"data" : "profession"
+					},{
+						"data" : "currentQuest"
+					},{
+						"data": "summonLeft"
+					},{
+						"data": "stamina"
+					},{
+						"data": "xp"
+					},{
+						"data": "staminaFullAt"
 					}
 				],
 			});
