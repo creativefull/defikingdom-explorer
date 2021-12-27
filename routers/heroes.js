@@ -11,7 +11,7 @@ function Heroes() {
 	}
 
 	this.dataTable = async (req, res, next) => {
-		getHeroes({owner : ''})
+		getHeroes()
 			.then(async (heros) => {
 				let decoder = new InputDataDecoder(abiQuest);
 				let output = heros.map((x) => {
@@ -76,15 +76,65 @@ function Heroes() {
 	}
 
 	this.heroDetail = async (req, res, next) => {
-
+		let heroID = req.params.heroID;
+		let query = `
+			query {
+				heros(where : {
+					id : "${heroID}"
+				}) {
+					id
+					numberId
+					profession
+					rarity
+					currentQuest
+					owner {
+						id
+						name
+					}
+					mp
+					xp
+					sp
+					level
+					stamina
+					staminaFullAt
+					summons
+					maxSummons
+					generation
+					mainClass
+					subClass
+					strength
+					vitality
+					agility
+					wisdom
+					intelligence
+					luck
+					endurance
+					dexterity
+				}
+			}
+		`;
+		clientGraphql.query(query)
+			.then(async (body) => {
+				let data = body.data;
+				let heros = data.heros.length>0?data.heros[0] : null;
+				let owner = heros&&heros.owner?heros.owner:null;
+				return res.render('detailHero',{
+					heros : heros,
+					owner : owner
+				});
+			})
+			.catch((err) => {
+				return next(err);
+			})
 	}
 
 	const getHeroes = async (options) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				clientGraphql.query(`
-					query heros($owner : String) {
-						heros(where : {}) {
+				options = options||"";
+				let query = `
+					query {
+						heros(where : {${options}}) {
 							id
 							numberId
 							profession
@@ -107,17 +157,18 @@ function Heroes() {
 							subClass
 						}
 					}
+				`;
 
-				`, options)
-				.then(async (body) => {
-					let data = body.data;
-					let heros = data.heros;
-					return resolve(heros);
-				})
-				.catch((err) => {
-					console.log(err.message);
-					return reject(err);
-				});
+				clientGraphql.query(query)
+					.then(async (body) => {
+						let data = body.data;
+						let heros = data.heros;
+						return resolve(heros);
+					})
+					.catch((err) => {
+						console.log(err);
+						return reject(err);
+					});
 			} catch (err) {
 				return reject(err);
 			}

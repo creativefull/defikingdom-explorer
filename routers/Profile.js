@@ -276,9 +276,6 @@ function Profile () {
 	const getHeroes = async (address) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let variables = {
-					owner : address,
-				}
 				let query = `
 					query {
 						heros(where : { owner : "${address.toLowerCase()}"}) {

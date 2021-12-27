@@ -1,0 +1,108 @@
+extends layout
+block style
+	style.
+		.txn-row {
+			border-bottom: 1px solid#EEE;
+		}
+
+		.txn-body {
+			margin: 0px;
+		}
+		.hash-tag {
+			max-width: 171px;
+			display: inline-block;
+			vertical-align: bottom;
+		}
+block content
+	.container.mt-2
+		div.row
+			div.col-lg-12
+				h5.page-title
+					center 
+						span(style = 'white-space : normal; color : #000!important; font-size : 20px;') 
+							| #{owner&&owner.id?owner.id.toUpperCase() : ''}
+							| (#{owner&&owner.name?owner.name : ''})
+	div.container
+		div.row
+			div.col-lg-4
+				.card
+					.card-header
+						.card-title Statistics
+					.card-body
+						div(class = 'row align-items-center')
+							div(class = 'col-md-3 mb-1 mb-md-0') STR :
+							div.col-md-3
+								span #{heros?heros.strength:0}
+							div(class = 'col-md-3 mb-1 mb-md-0') DEX :
+							div.col-md-3
+								span #{heros?heros.dexterity:0}
+						hr
+						div(class = 'row align-items-center')
+							div(class = 'col-md-3 mb-1 mb-md-0') AGI :
+							div.col-md-3
+								span #{heros?heros.agility:0}
+							div(class = 'col-md-3 mb-1 mb-md-0') VIT :
+							div.col-md-3
+								span #{heros?heros.vitality:0}
+						hr
+						div(class = 'row align-items-center')
+							div(class = 'col-md-3 mb-1 mb-md-0') END :
+							div.col-md-3
+								span #{heros?heros.endurance:0}
+							div(class = 'col-md-3 mb-1 mb-md-0') INT :
+							div.col-md-3
+								span #{heros?heros.intelligence:0}
+						hr
+						div(class = 'row align-items-center')
+							div(class = 'col-md-3 mb-1 mb-md-0') WIS :
+							div.col-md-3
+								span #{heros?heros.wisdom:0}
+							div(class = 'col-md-3 mb-1 mb-md-0') LCK :
+							div.col-md-3
+								span #{heros?heros.luck:0}
+
+			div.col-lg-4
+				.card
+					.card-header
+						.card-title Profession
+					.card-body
+						div(class = 'row align-items-center')
+							div(class = 'col-md-6 mb-1 mb-md-0') Mining :
+							div.col-md-2
+								span 0
+						hr
+						div(class = 'row align-items-center')
+							div(class = 'col-md-6 mb-1 mb-md-0') Fishing :
+							div.col-md-2
+								span 0
+						hr
+						div(class = 'row align-items-center')
+							div(class = 'col-md-6 mb-1 mb-md-0') Gardening :
+							div.col-md-2
+								span 0
+						hr
+						div(class = 'row align-items-center')
+							div(class = 'col-md-6 mb-1 mb-md-0') Foraging :
+							div.col-md-2
+								span 0
+
+			div.col-lg-4
+				.card
+					.card-header
+						.card-title Genre
+					.card-body
+						div(class = 'row align-items-center')
+							div(class = 'col-md-6 mb-1 mb-md-0') Main Class :
+							div.col-md-2
+								span 0
+						hr
+						div(class = 'row align-items-center')
+							div(class = 'col-md-6 mb-1 mb-md-0') Sub class :
+							div.col-md-2
+								span 0
+						hr
+						div(class = 'row align-items-center')
+							div(class = 'col-md-6 mb-1 mb-md-0') Profession :
+							div.col-md-2
+								span 0
+	script.
