@@ -185,13 +185,11 @@ block script
 							class : 'list list-unstyled mb-0'
 						});
 						let balanceUsd = 0;
-						let tokenSymbol = "";
-						let balanceToken = 0;
+						let jmlToken = 0;
 						tokens.forEach(function (t, index){
 							if (index == 0) {
 								balanceUsd = t.usdPrice;
-								tokenSymbol = t.symbol.trim();
-								balanceToken = t.balance;
+								jmlToken += 1;
 							} else if (t.balance>0 && index >0) {
 								let listChild = $('<li/>', {
 									class : 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1',
@@ -233,10 +231,12 @@ block script
 
 								listChild.append(aLink);
 								parentList.append(listChild);
+								jmlToken += 1;
 							}
 						});
-						$('input#inputToken').val(`${tokenSymbol} (${parseFloat(balanceToken).toFixed(2)}) $${parseFloat(balanceUsd).toFixed(2)}`);
+						$('input#inputToken').val(`Token (${jmlToken})`);
 						$('#myListToken').append(parentList);
+						//- $('input#inputToken').val(`Token (${jmlToken}) $${parseFloat(balanceUsd).toFixed(2)}`);
 						//- $('#myListToken').css('height', '400px');
 						//- $('#listContractToken').html(listContractToken);	
 					}
