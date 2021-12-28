@@ -185,9 +185,14 @@ block script
 							class : 'list list-unstyled mb-0'
 						});
 						let balanceUsd = 0;
+						let tokenSymbol = "";
+						let balanceToken = 0;
 						tokens.forEach(function (t, index){
-							if (t.balance>0 && index >0) {
-								balanceUsd += t.usdPrice
+							if (index == 0) {
+								balanceUsd = t.usdPrice;
+								tokenSymbol = t.symbol.trim();
+								balanceToken = t.balance;
+							} else if (t.balance>0 && index >0) {
 								let listChild = $('<li/>', {
 									class : 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1',
 									'data-name' : t.name,
@@ -230,7 +235,7 @@ block script
 								parentList.append(listChild);
 							}
 						});
-						$('input#inputToken').val(`$ ${parseFloat(balanceUsd).toFixed(2)}`);
+						$('input#inputToken').val(`${tokenSymbol} (${parseFloat(balanceToken).toFixed(2)}) $${parseFloat(balanceUsd).toFixed(2)}`);
 						$('#myListToken').append(parentList);
 						//- $('#myListToken').css('height', '400px');
 						//- $('#listContractToken').html(listContractToken);	
