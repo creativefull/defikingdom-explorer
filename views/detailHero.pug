@@ -1,17 +1,22 @@
 extends layout
 block style
 	style.
-		.txn-row {
-			border-bottom: 1px solid#EEE;
+		.card .card-header:first-child, .card-light .card-header:first-child {
+			border-radius : 0px;
 		}
-
-		.txn-body {
-			margin: 0px;
+		.card-pricing.card-pricing-focus {
+			padding : 40px 5px;
 		}
-		.hash-tag {
-			max-width: 171px;
-			display: inline-block;
-			vertical-align: bottom;
+		.card-pricing .card-header {
+			border-bottom : 0!important;
+		}
+		.card-pricing {
+			border-radius : 5px;
+			text-align : center;
+		}
+		.card-primary {
+			background : #1572e8!important;
+			color : #fff!important;
 		}
 block content
 	.container.mt-2
@@ -24,11 +29,13 @@ block content
 							| (#{owner&&owner.name?owner.name : ''})
 	div.container
 		div.row
-			div.col-lg-4
-				.card
-					.card-header
-						.card-title Statistics
+			div.col-lg-3
+				div(class = 'card card-pricing card-pricing-focus card-primary')
 					.card-body
+						div(class = 'row align-items-center')
+							div(class = 'col-md-12 mb-1 mb-md-0')
+								span Stats
+						hr
 						div(class = 'row align-items-center')
 							div(class = 'col-md-3 mb-1 mb-md-0') STR :
 							div.col-md-3
@@ -60,58 +67,26 @@ block content
 							div(class = 'col-md-3 mb-1 mb-md-0') LCK :
 							div.col-md-3
 								span #{heros?heros.luck:0}
-					.card-footer
+						br
 						div(class = 'row align-items-center')
-							div(class = 'col-md-12 mb-1 mb-md-1') #{heros?heros.maxSummons:0} Summons left
+							div(class = 'col-md-12 mb-1 mb-md-0')
+								span Professions
+						hr
 						div(class = 'row align-items-center')
-							div(class = 'col-md-12 mb-1 mb-md-1') Level #{heros?heros.level:1}
-						div(class = 'row align-items-center')
-							div(class = 'col-md-12 mb-1 mb-md-1') #{heros?heros.xp:1} XP
-
-			div.col-lg-4
-				.card
-					.card-header
-						.card-title Profession
-					.card-body
-						div(class = 'row align-items-center')
-							div(class = 'col-md-6 mb-1 mb-md-0') Mining :
-							div.col-md-2
+							div(class = 'col-md-3 mb-1 mb-md-0') Mining :
+							div.col-md-3
 								span #{heros?heros.mining:0}
-						hr
-						div(class = 'row align-items-center')
-							div(class = 'col-md-6 mb-1 mb-md-0') Fishing :
-							div.col-md-2
-								span #{heros?heros.fishing:0}
-						hr
-						div(class = 'row align-items-center')
-							div(class = 'col-md-6 mb-1 mb-md-0') Gardening :
+							div(class = 'col-md-4 mb-1 mb-md-0') Gardening :
 							div.col-md-2
 								span #{heros?heros.gardening:0}
-						hr
-						div(class = 'row align-items-center')
-							div(class = 'col-md-6 mb-1 mb-md-0') Foraging :
+						div(class = 'row align-items-left')
+							div(class = 'col-md-3 mb-1 mb-md-0') Fishing :
+							div.col-md-3
+								span #{heros?heros.fishing:0}
+							div(class = 'col-md-4 mb-1 mb-md-0') Foraging :
 							div.col-md-2
 								span #{heros?heros.foraging:0}
 
-			div.col-lg-4
-				.card
-					.card-header
-						.card-title Genre
-					.card-body
-						div(class = 'row align-items-center')
-							div(class = 'col-md-6 mb-1 mb-md-0') Main Class :
-							div.col-md-6
-								span #{heros?heros.mainClass:''}
-						hr
-						div(class = 'row align-items-center')
-							div(class = 'col-md-6 mb-1 mb-md-0') Sub class :
-							div.col-md-6
-								span #{heros?heros.subClass:''}
-						hr
-						div(class = 'row align-items-center')
-							div(class = 'col-md-6 mb-1 mb-md-0') Profession :
-							div.col-md-6
-								span(style = 'margin-left:5px;' class = 'u-label u-label--xs u-label--badge-in u-label--primary text-center text-nowrap') 
-									small #{heros?heros.profession.toUpperCase():''}
+			div.col-lg-9
 
 	script.
