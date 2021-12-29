@@ -33,4 +33,28 @@ exports.abis = [{
     'abi': require('../abi/saleAuction.json'),
     'icon': 'icon-basket-loaded',
     'color': '#ACBAC9'
+}, {
+    'type': 'PROFILE',
+    'address': '0xabD4741948374b1f5DD5Dd7599AC1f85A34cAcDD',
+    'abi': require('../abi/profile.json'),
+    'icon': 'icon-user',
+    'color': '#ACBAC9'
+}, {
+    'type': 'SUMMONING',
+    'address': '0xa2D001C829328aa06a2DB2740c05ceE1bFA3c6bb',
+    'abi': require('../abi/summoning.json'),
+    'icon': 'icon-user',
+    'color': '#ACBAC9'
+}, {
+    'type': 'SUMMONING',
+    'address': '0x65dea93f7b886c33a78c10343267dd39727778c2',
+    'abi': require('../abi/crystal.json'),
+    'icon': 'icon-user',
+    'color': '#ACBAC9'
+}, {
+    'type': 'GARDEN',
+    'address': '0xdb30643c71ac9e2122ca0341ed77d09d5f99f924',
+    'abi': require('../abi/garden.json'),
+    'icon': 'icon-user',
+    'color': '#ACBAC9'
 }, ...erc20abis]
