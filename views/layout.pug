@@ -30,6 +30,9 @@ html(lang="en")
             .push {
                 margin-bottom: 10em;
             }
+            .dropdown-toggle:after {
+                content : ""!important;
+            }
         block style
     body
         div.wrapper(style="min-height: 100vh;")
@@ -37,14 +40,12 @@ html(lang="en")
                 .u-header__section
                     #logoAndNav.container
                         nav.js-mega-menu.navbar.navbar-expand-md.u-header__navbar.u-header__navbar--no-space.hs-menu-initialized.hs-menu-horizontal
+                            button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navBar" aria-controls="navBar" aria-expanded="false" aria-label="Toggle navigation")
+                                span(class="navbar-toggler-icon")
+                           
                             .w-lg-auto
                                 a.navbar-brand.pt-md-0(href="/" aria-label="DFKScan")
                                     img(src="https://defikingdoms.com/img/defi-kingdoms-logo.png" alt="navbar brand" width="160px")#logo-header
-                                //- #onePrice
-                                //-     .d-none.d-md-inline-block.u-label.u-label--price.rounded.mt-1.ml-n1.text-nowrap
-                                //-         span.text-dark JEWEL : $8,5
-                                //-         span(data-toggle="tooltip" data-placement="top" data-title="Changes in the last 24 hours" data-original-title title)
-                                //-             span.text-success (+10,5%)
                             div
                             .d-flex.flex-column.w-100
                                 #navBar.collapse.navbar-collapse.u-header__navbar-collapse.order-md-2
@@ -57,10 +58,13 @@ html(lang="en")
                                             a.nav-link.u-header__nav-link(href="/token/list") Tokens
                                         li.nav-item.u-header__nav-item(data-event="hover" data-animation-in="slideInUp" data-animation-out="fadeOut")
                                             a.nav-link.u-header__nav-link(href="/hero/list") Heroes
-                                        li.nav-item.u-header__nav-item(data-event="hover" data-animation-in="slideInUp" data-animation-out="fadeOut")
-                                            a.nav-link.u-header__nav-link(href="/trx/router") Router
-                                        li.nav-item.u-header__nav-item(data-event="hover" data-animation-in="slideInUp" data-animation-out="fadeOut")
-                                            a.nav-link.u-header__nav-link(href="/trx/bank") Bank
+                                        li.nav-item.dropdown.u-header__nav-item(data-event="hover" data-animation-in="slideInUp" data-animation-out="fadeOut")
+                                            a.dropdown-toggle.nav-link.u-header__nav-link#navbarDropdownMenuLink(href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Transactions
+                                            div(class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink")
+                                                a(class="dropdown-item" href="/trx/router") Router
+                                                a(class="dropdown-item" href="/trx/bank") Bank
+                                                a(class="dropdown-item" href="/trx/garden") Garden
+
             block middleContent
             block content
         .push
