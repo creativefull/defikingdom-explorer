@@ -167,6 +167,7 @@ function Heroes() {
 					.then(async (body) => {
 						let data = body.data;
 						let heros = data.heros;
+						console.log(`TOTAL HEROES : ${heros.length}`)
 						return resolve(heros);
 					})
 					.catch((err) => {

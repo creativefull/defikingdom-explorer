@@ -66,8 +66,8 @@ block content
 							div(class = 'col-md-4 mb-1 mb-md-0') JEWEL Value:
 							div.col-md-8
 								span#usd-price
-						hr
-						div(class = 'row align-items-center')
+						hr#borderTop(style = 'display : none;')
+						div(class = 'row align-items-center' style = 'display : none;')#fieldToken
 							div(class = 'col-md-4 mb-1 mb-md-0') Token:
 							div.col-md-8 
 								span.small(tyle = 'position:relative;top:-1px')#listContractToken 
@@ -189,7 +189,6 @@ block script
 						tokens.forEach(function (t, index){
 							if (index == 0) {
 								balanceUsd = t.usdPrice;
-								jmlToken += 1;
 							} else if (t.balance>0 && index >0) {
 								let listChild = $('<li/>', {
 									class : 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1',
@@ -236,6 +235,13 @@ block script
 						});
 						$('input#inputToken').val(`Token (${jmlToken})`);
 						$('#myListToken').append(parentList);
+						if (jmlToken==0) {
+							$('#fieldToken').hide();
+							$('#borderTop').hide();
+						} else {
+							$('#fieldToken').show();
+							$('#borderTop').show();
+						}
 						//- $('input#inputToken').val(`Token (${jmlToken}) $${parseFloat(balanceUsd).toFixed(2)}`);
 						//- $('#myListToken').css('height', '400px');
 						//- $('#listContractToken').html(listContractToken);	
