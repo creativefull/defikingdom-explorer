@@ -51,7 +51,10 @@ block content
                                             span Contract 
                                         span#fromToCopy(style="display: none")= data.from
                                         span
-                                            a(href="javascript:void(0)" title=data.from)= data.from
+                                            if (data.fromTag)
+                                                a(href="/trx/" + data.from title=data.from)= data.from
+                                            else
+                                                a(href="/address/" + data.from title=data.from)= data.from
                                         if data.fromTag
                                             i.fa.fa-check-circle.text-success.mx-1.mb-2
                                             span= ' ( ' + data.fromTag + ' )'
@@ -64,11 +67,17 @@ block content
                                             span Contract 
                                         span#toToCopy(style="display: none")= data.to
                                         span
-                                            a(href="javscript:void(0)" title=data.to)= data.to
+                                            if (data.toTag)
+                                                a(href="/trx/" + data.toTag title=data.to)= data.to
+                                            else
+                                                a(href="/address/" + data.to title=data.to)= data.to
                                         if (data.toTag)
                                             i.fa.fa-check-circle.text-success.mx-1.mb-2
                                             span= ' ( ' + data.toTag + ' )'
-
+                                
+                                if (data.dataQuest)
+                                    include partials/questDetail
+                                // CEK TOKEN TRANSFERS
                                 if (data.tokenTransfers.length > 0)
                                     .row.p-3.txn-row
                                         .col-md-3
@@ -83,18 +92,18 @@ block content
                                                             span
                                                                 b From 
                                                             span.hash-tag.text-truncate.mr-1
-                                                                a(href="javascript:void(0)" title=value.from)= value.from
+                                                                a(href="/address/" + value.from title=value.from)= value.from
                                                             span.mr-1
                                                             span
                                                                 b To 
                                                             span.hash-tag.text-truncate.mr-1
-                                                                a(href="javascript:void(0)" title=value.to)= value.to
+                                                                a(href="/address/" + value.to title=value.to)= value.to
                                                             span.mr-1
                                                             span
                                                                 b For 
                                                             span.mr-1= value.amount 
                                                             span.hash-tag.text-truncate.mr-1
-                                                                a(href="javascript:void(0)" title=value.symbol)= value.name + ' (' + value.symbol + ')'
+                                                                a(href="/address/" + value.to title=value.symbol)= value.name + ' (' + value.symbol + ')'
 
                                 .row.p-3.txn-row
                                     .col-md-3

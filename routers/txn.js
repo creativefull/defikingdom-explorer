@@ -5,22 +5,44 @@ const swapLib = require('../miners/swap')
 const moment = require('moment')
 const _ = require('underscore')
 const {abis} = require('../miners/abis')
+const {
+    completeQuest
+} = require('../lib/quest')
+function validate_txhash(addr)
+{
+  return /^0x([A-Fa-f0-9]{64})$/.test(addr);
+}
 
 function Txn() {
     this.detail = async (req,res,next) => {
         let hash = req.params.hash
+        if (!validate_txhash(hash)) {
+            return res.render('detailTxn', {
+                title: 'Not Found',
+                data: null
+            })
+        }
         let data = await TrxModel.findOne({hash: hash})
 
         if (data) {
+            data = data.toJSON()
             data.fee = (data.gas * parseInt(data.gasPrice)) / 10 ** 18;
         } else {
-            trxData = await swapLib.parseTrx(hash)
-            data = trxData.filter((t) => t != null)
-            if (data.length > 0) {
-                data = data[0]
-            } else {
+            try {
+                trxData = await swapLib.parseTrx(hash)
+                data = trxData.filter((t) => t != null)
+                if (data.length > 0) {
+                    data = data[0]
+                } else {
+                    return res.render('detailTxn', {
+                        title: 'Defi Kingdoms Transaction Hash (Txhash) Detail',
+                        data: null
+                    })
+                }
+            } catch (e) {
+                console.error(e)
                 return res.render('detailTxn', {
-                    title: 'Defi Kingdoms Transaction Hash (Txhash) Detail',
+                    title: 'Not Found',
                     data: null
                 })
             }
@@ -42,6 +64,13 @@ function Txn() {
 
             /* PARSING TIME */
             data.timestamp = moment.unix(data.timestamp).fromNow() + ' ( ' + moment.unix(data.timestamp).format('MM/DD/YYYY HH:mm:ss A') + ' )'
+
+            /* CEK IF QUEST TRANSACTIONS */
+            if (data.actionName?.toLowerCase() == 'quest' && data.method?.toLowerCase() == 'completequest') {
+                let dataQuest = await completeQuest(hash)
+                data.dataQuest = dataQuest
+                // console.log(data)
+            }
         }
 
         // console.log(data)
