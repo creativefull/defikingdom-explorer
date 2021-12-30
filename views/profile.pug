@@ -101,6 +101,14 @@ block content
 							div(id="tabTrx" class="tab-pane out active")
 								br
 								.row
+									.col-md-3.col-xs-3.col-sm-3
+										select.form-control#filterTrxn
+											option(value = 'all') All In
+											option(value = 'market') Market
+											option(value = 'quest') Quest
+											option(value = 'garden') Garden
+								br
+								.row
 									.col-md-12.col-xs-12.col-sm-12
 										.table-responsive
 											table.table.table-hover.display#tableLastTxn(width="100%" cellspacing="0")
@@ -260,7 +268,7 @@ block script
 				searching : false,
 				"autoWidth" : true,
 				fixedColumns: true,
-				ajax : `/address/${address}/trx/dataTable`,
+				ajax : `/address/${address}/trx/dataTable/all`,
 				responsive: true,
 				lengthChange: false,
 				columns : [
@@ -290,6 +298,48 @@ block script
 					{ width: "3%", targets: 6 }
 				],
 			});
+
+			$('select#filterTrxn').change(function (e){
+				e.preventDefault();
+				var value = $(this).val();
+				$('#tableLastTxn').DataTable().destroy();
+				tableLastTxn = $('#tableLastTxn').DataTable({
+					serverSide: true,
+					"pageLength":  50,
+					searching : false,
+					"autoWidth" : true,
+					fixedColumns: true,
+					ajax : `/address/${address}/trx/dataTable/${value}`,
+					responsive: true,
+					lengthChange: false,
+					columns : [
+						{
+							"data" : "hash",
+						},{
+							"data" : "method",
+						},{
+							"data" : "blockNumber",
+						},{
+							"data" : "age",
+						},{
+							"data" : "from",
+						},{
+							"data" : "to",
+						},{
+							"data" : "value",
+						}
+					],
+					columnDefs : [
+						{ width: "10%", targets: 0 },
+						{ width: "5%", targets: 1 },
+						{ width: "5%", targets: 2 },
+						{ width: "5%", targets: 3 },
+						{ width: "10%", targets: 4 },
+						{ width: "10%", targets: 5 },
+						{ width: "3%", targets: 6 }
+					],
+				});
+			})
 
 			//- DATATABLE HEROES
 			tableHeroes = $('#tableMyHeroes').DataTable({

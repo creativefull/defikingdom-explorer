@@ -76,12 +76,16 @@ function Profile () {
 
 	this.dataTableTransaction = async (req, res, next) => {
 		let address = req.params.address;
+		let actionName = req.params.actionName;
 		let where = {
 			$or: [{
 				from: new RegExp(address, 'gi')
 			}, {
 				to: new RegExp(address, 'gi')
 			}]
+		}
+		if (actionName!='all') {
+			where['actionName'] = actionName.toUpperCase();
 		}
 
 		TrxModel.find(where)

@@ -25,7 +25,7 @@ app.get('/trx/:action/dataTable', Transaction.dataTableOther);
 
 app.get('/address/:address', Profile.address);
 app.get('/address/:address/stats', Profile.stats);
-app.get('/address/:address/trx/dataTable', Profile.dataTableTransaction);
+app.get('/address/:address/trx/dataTable/:actionName', Profile.dataTableTransaction);
 app.get('/address/:address/hero/dataTable', Profile.dataTableHeroes);
 
 app.get('/hero/list', Heroes.index);
