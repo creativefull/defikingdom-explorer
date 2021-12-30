@@ -78,7 +78,6 @@ function Dashboard() {
             return res.redirect(`/tx/${trxData.hash}`);
         } else {
             return res.redirect(`/tx/404`);
-            // return res.redirect(`/tx/${key}?`);
         }
     }
 

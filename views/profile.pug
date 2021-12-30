@@ -302,7 +302,7 @@ block script
 			$('select#filterTrxn').change(function (e){
 				e.preventDefault();
 				var value = $(this).val();
-				$('#tableLastTxn').DataTable().destroy();
+				$('#tableLastTxn').DataTable().destroy(); // destroy element table
 				tableLastTxn = $('#tableLastTxn').DataTable({
 					serverSide: true,
 					"pageLength":  50,
