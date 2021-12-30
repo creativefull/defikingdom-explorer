@@ -77,8 +77,15 @@ function Dashboard() {
         if (trxData) {
             return res.redirect(`/tx/${trxData.hash}`);
         } else {
-            return res.render('notFound');
+            return res.redirect('/error/404');
         }
+    }
+
+    this.notFound = async (req, res, next) => {
+        return res.render('not-found',{
+            statusCode : req.params.statusCode,
+            title : 'Result'
+        });
     }
 
     this.jewelStats = async (req,res,next) => {

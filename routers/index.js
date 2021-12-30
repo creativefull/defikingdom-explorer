@@ -10,6 +10,7 @@ const HeroesHandler = require('./heroes'), Heroes = new HeroesHandler();
 
 app.get('/', Dashboard.index)
 app.get('/jewel-stats', Dashboard.jewelStats);
+app.get('/error/:statusCode', Dashboard.notFound);
 app.get('/search', Dashboard.searchTxn);
 
 // DETAIL TRANSACTION
