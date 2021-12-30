@@ -55,6 +55,12 @@ block content
                                 h2.font-size-1.text-uppercase.text-secondary.mb-0 TRANSACTIONS
                                 a.text-size-1(href="#" rel="tooltip" data-toggle="tooltip" data-placement="bottom" title data-original-title="View Historical JEWEL Price")#jewel-volume
                         hr.hr-space-lg
+
+                    .col-md-6.col-lg-4.u-ver-divider.u-ver-divider--left.u-ver-divider--none-md
+                        p.text-muted Grafik
+                        div(class = 'pull-in sparkline-fix')
+                            div#lineChart
+                        
         .row.mb-5
             .col-md-6.mb-5.col-xs-12.col-sm-12
                 .card
@@ -155,5 +161,14 @@ block script
                         $("#harmony-block").text(latestBlock)
                     }
                 }
-            })
+            });
+
+            $('#lineChart').sparkline([105,103,123,100,95,105,115], {
+                type: 'line',
+                height: '100',
+                width: '100%',
+                lineWidth: '1',
+                lineColor: '#ffa534',
+                fillColor: 'rgba(255, 165, 52, .14)'
+            });
         })
