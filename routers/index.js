@@ -9,7 +9,8 @@ const TokenHandler = require('./token'), Token = new TokenHandler()
 const HeroesHandler = require('./heroes'), Heroes = new HeroesHandler();
 
 app.get('/', Dashboard.index)
-app.get('/jewel-stats', Dashboard.jewelStats)
+app.get('/jewel-stats', Dashboard.jewelStats);
+app.get('/search', Dashboard.searchTxn);
 
 // DETAIL TRANSACTION
 app.get('/tx/:hash', Txn.detail)

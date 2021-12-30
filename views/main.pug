@@ -11,10 +11,10 @@ block middleContent
                             .input-group-prepend.d-none.d-md-block
                                 select(name="f" class="custom-select custom-arrow-select input-group-text font-size-base filterby")
                                     option(value="0") All Filters
-                                    options Address
-                                    options Token
-                                    options Hash
-                            input#txtSearchInput(class="form-control searchautocomplete ui-autocomplete-input list-unstyled py-3 mb-0" placeholder="Search by Txn Hash" autocomplete="off")
+                                    option(value = "0") Hash
+                                    option(value = "1") Address
+                                    option(value = "2") Token
+                            input#txtSearchInput(class="form-control searchautocomplete ui-autocomplete-input list-unstyled py-3 mb-0" placeholder="Search by Txn Hash" name ='search' autocomplete="off")
                             input(type="hidden")#hdnSearchText
                             .input-group-append
                                 .btn.btn-primary(type="submit")
