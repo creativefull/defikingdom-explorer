@@ -28,9 +28,10 @@ block style
 			position: absolute;
 			background-color: #f6f6f6;
 			min-width: 100%;
-			overflow: scroll;
+			overflow:hidden; 
+			overflow-y:scroll;
 			border: 1px solid #ddd;
-			z-index: 1;
+			z-index: 999;
 			padding : 5px;
 		}
 
@@ -242,8 +243,11 @@ block script
 							$('#fieldToken').show();
 							$('#borderTop').show();
 						}
+
+						if (jmlToken >= 4) {
+							$('#myListToken').css('height', '350px');
+						}
 						//- $('input#inputToken').val(`Token (${jmlToken}) $${parseFloat(balanceUsd).toFixed(2)}`);
-						//- $('#myListToken').css('height', '400px');
 						//- $('#listContractToken').html(listContractToken);	
 					}
 				}
