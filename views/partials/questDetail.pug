@@ -1,0 +1,28 @@
+.row.p-3.txn-quest-log.txn-row
+    .col-md-3.mb-2
+        small Logs
+    .col-md-9
+        table.table-bordered.table
+            tr
+                td(style="width: 10%") HeroID
+                td(style="width: 10%") Stamina Spent
+                td Reward
+            each heroes in data.dataQuest.QuestCompleted
+                - let hero = heroes.data.filter((d) => d.name == 'heroId')
+                tr
+                    td
+                        span= hero[0].value
+                    td
+                        each stamina in data.dataQuest.QuestStaminaSpent
+                            - let stamHero = stamina.data[2].value
+                            - let stam = stamina.data[4].value
+                            if (stamHero == hero[0].value)
+                                span= stam + " Stamina"
+                    td
+                        each rewards in data.dataQuest.QuestReward
+                            - let rewardHero = rewards.data[2].value
+                            - let reward = rewards.data[4].value
+                            - let symbol = rewards.data[3].value
+                            if (rewardHero == hero[0].value)
+                                small= reward + ' ' + symbol
+                                br

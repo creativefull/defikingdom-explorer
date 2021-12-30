@@ -19,74 +19,8 @@ block style
 			color : #fff!important;
 		}
 block content
-	.container.mt-2
-		div.row
-			div.col-lg-12
-				h5.page-title
-					center 
-						span(style = 'white-space : normal; color : #000!important; font-size : 20px;') 
-							| #{owner&&owner.id?owner.id.toUpperCase() : ''}
-							| (#{owner&&owner.name?owner.name : ''})
-	div.container
-		div.row
-			div.col-lg-3
-				div(class = 'card card-pricing card-pricing-focus card-primary')
-					.card-body
-						div(class = 'row align-items-center')
-							div(class = 'col-md-12 mb-1 mb-md-0')
-								span Stats
-						hr
-						div(class = 'row align-items-center')
-							div(class = 'col-md-3 mb-1 mb-md-0') STR :
-							div.col-md-3
-								span #{heros?heros.strength:0}
-							div(class = 'col-md-3 mb-1 mb-md-0') DEX :
-							div.col-md-3
-								span #{heros?heros.dexterity:0}
-						hr
-						div(class = 'row align-items-center')
-							div(class = 'col-md-3 mb-1 mb-md-0') AGI :
-							div.col-md-3
-								span #{heros?heros.agility:0}
-							div(class = 'col-md-3 mb-1 mb-md-0') VIT :
-							div.col-md-3
-								span #{heros?heros.vitality:0}
-						hr
-						div(class = 'row align-items-center')
-							div(class = 'col-md-3 mb-1 mb-md-0') END :
-							div.col-md-3
-								span #{heros?heros.endurance:0}
-							div(class = 'col-md-3 mb-1 mb-md-0') INT :
-							div.col-md-3
-								span #{heros?heros.intelligence:0}
-						hr
-						div(class = 'row align-items-center')
-							div(class = 'col-md-3 mb-1 mb-md-0') WIS :
-							div.col-md-3
-								span #{heros?heros.wisdom:0}
-							div(class = 'col-md-3 mb-1 mb-md-0') LCK :
-							div.col-md-3
-								span #{heros?heros.luck:0}
-						br
-						div(class = 'row align-items-center')
-							div(class = 'col-md-12 mb-1 mb-md-0')
-								span Professions
-						hr
-						div(class = 'row align-items-center')
-							div(class = 'col-md-3 mb-1 mb-md-0') Mining :
-							div.col-md-3
-								span #{heros?heros.mining:0}
-							div(class = 'col-md-4 mb-1 mb-md-0') Gardening :
-							div.col-md-2
-								span #{heros?heros.gardening:0}
-						div(class = 'row align-items-left')
-							div(class = 'col-md-3 mb-1 mb-md-0') Fishing :
-							div.col-md-3
-								span #{heros?heros.fishing:0}
-							div(class = 'col-md-4 mb-1 mb-md-0') Foraging :
-							div.col-md-2
-								span #{heros?heros.foraging:0}
-
-			div.col-lg-9
-
-	script.
+	main
+		.container
+			.d-md-flex.justify-content-between.align-items-center.py-3
+				.mb-1.mb-md-0
+					h1.h4.mb-0 Coming Soon

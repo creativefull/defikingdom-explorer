@@ -28,9 +28,10 @@ block style
 			position: absolute;
 			background-color: #f6f6f6;
 			min-width: 100%;
-			overflow: scroll;
+			overflow:hidden; 
+			overflow-y:scroll;
 			border: 1px solid #ddd;
-			z-index: 1;
+			z-index: 999;
 			padding : 5px;
 		}
 
@@ -66,8 +67,8 @@ block content
 							div(class = 'col-md-4 mb-1 mb-md-0') JEWEL Value:
 							div.col-md-8
 								span#usd-price
-						hr
-						div(class = 'row align-items-center')
+						hr#borderTop(style = 'display : none;')
+						div(class = 'row align-items-center' style = 'display : none;')#fieldToken
 							div(class = 'col-md-4 mb-1 mb-md-0') Token:
 							div.col-md-8 
 								span.small(tyle = 'position:relative;top:-1px')#listContractToken 
@@ -98,6 +99,14 @@ block content
 
 						div(class="tab-content")
 							div(id="tabTrx" class="tab-pane out active")
+								br
+								.row
+									.col-md-3.col-xs-3.col-sm-3
+										select.form-control#filterTrxn
+											option(value = 'all') All In
+											option(value = 'market') Market
+											option(value = 'quest') Quest
+											option(value = 'garden') Garden
 								br
 								.row
 									.col-md-12.col-xs-12.col-sm-12
@@ -189,7 +198,6 @@ block script
 						tokens.forEach(function (t, index){
 							if (index == 0) {
 								balanceUsd = t.usdPrice;
-								jmlToken += 1;
 							} else if (t.balance>0 && index >0) {
 								let listChild = $('<li/>', {
 									class : 'align-items-center font-size-1 rounded-sm py-1 px-2 mb-1',
@@ -236,8 +244,18 @@ block script
 						});
 						$('input#inputToken').val(`Token (${jmlToken})`);
 						$('#myListToken').append(parentList);
+						if (jmlToken==0) {
+							$('#fieldToken').hide();
+							$('#borderTop').hide();
+						} else {
+							$('#fieldToken').show();
+							$('#borderTop').show();
+						}
+
+						if (jmlToken >= 4) {
+							$('#myListToken').css('height', '350px');
+						}
 						//- $('input#inputToken').val(`Token (${jmlToken}) $${parseFloat(balanceUsd).toFixed(2)}`);
-						//- $('#myListToken').css('height', '400px');
 						//- $('#listContractToken').html(listContractToken);	
 					}
 				}
@@ -250,7 +268,7 @@ block script
 				searching : false,
 				"autoWidth" : true,
 				fixedColumns: true,
-				ajax : `/address/${address}/trx/dataTable`,
+				ajax : `/address/${address}/trx/dataTable/all`,
 				responsive: true,
 				lengthChange: false,
 				columns : [
@@ -280,6 +298,48 @@ block script
 					{ width: "3%", targets: 6 }
 				],
 			});
+
+			$('select#filterTrxn').change(function (e){
+				e.preventDefault();
+				var value = $(this).val();
+				$('#tableLastTxn').DataTable().destroy(); // destroy element table
+				tableLastTxn = $('#tableLastTxn').DataTable({
+					serverSide: true,
+					"pageLength":  50,
+					searching : false,
+					"autoWidth" : true,
+					fixedColumns: true,
+					ajax : `/address/${address}/trx/dataTable/${value}`,
+					responsive: true,
+					lengthChange: false,
+					columns : [
+						{
+							"data" : "hash",
+						},{
+							"data" : "method",
+						},{
+							"data" : "blockNumber",
+						},{
+							"data" : "age",
+						},{
+							"data" : "from",
+						},{
+							"data" : "to",
+						},{
+							"data" : "value",
+						}
+					],
+					columnDefs : [
+						{ width: "10%", targets: 0 },
+						{ width: "5%", targets: 1 },
+						{ width: "5%", targets: 2 },
+						{ width: "5%", targets: 3 },
+						{ width: "10%", targets: 4 },
+						{ width: "10%", targets: 5 },
+						{ width: "3%", targets: 6 }
+					],
+				});
+			})
 
 			//- DATATABLE HEROES
 			tableHeroes = $('#tableMyHeroes').DataTable({

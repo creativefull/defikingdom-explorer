@@ -76,60 +76,60 @@ function Heroes() {
 	}
 
 	this.heroDetail = async (req, res, next) => {
-		let heroID = req.params.heroID;
-		let query = `
-			query {
-				heros(where : {
-					id : "${heroID}"
-				}) {
-					id
-					numberId
-					profession
-					rarity
-					currentQuest
-					owner {
-						id
-						name
-					}
-					mp
-					xp
-					sp
-					level
-					stamina
-					staminaFullAt
-					summons
-					maxSummons
-					generation
-					mainClass
-					subClass
-					strength
-					vitality
-					agility
-					wisdom
-					intelligence
-					luck
-					endurance
-					dexterity
-					mining
-					fishing
-					foraging
-					gardening
-				}
-			}
-		`;
-		clientGraphql.query(query)
-			.then(async (body) => {
-				let data = body.data;
-				let heros = data.heros.length>0?data.heros[0] : null;
-				let owner = heros&&heros.owner?heros.owner:null;
+		// let heroID = req.params.heroID;
+		// let query = `
+		// 	query {
+		// 		heros(where : {
+		// 			id : "${heroID}"
+		// 		}) {
+		// 			id
+		// 			numberId
+		// 			profession
+		// 			rarity
+		// 			currentQuest
+		// 			owner {
+		// 				id
+		// 				name
+		// 			}
+		// 			mp
+		// 			xp
+		// 			sp
+		// 			level
+		// 			stamina
+		// 			staminaFullAt
+		// 			summons
+		// 			maxSummons
+		// 			generation
+		// 			mainClass
+		// 			subClass
+		// 			strength
+		// 			vitality
+		// 			agility
+		// 			wisdom
+		// 			intelligence
+		// 			luck
+		// 			endurance
+		// 			dexterity
+		// 			mining
+		// 			fishing
+		// 			foraging
+		// 			gardening
+		// 		}
+		// 	}
+		// `;
+		// clientGraphql.query(query)
+		// 	.then(async (body) => {
+		// 		let data = body.data;
+		// 		let heros = data.heros.length>0?data.heros[0] : null;
+		// 		let owner = heros&&heros.owner?heros.owner:null;
 				return res.render('detailHero',{
-					heros : heros,
-					owner : owner
+					// heros : heros,
+					// owner : owner
 				});
-			})
-			.catch((err) => {
-				return next(err);
-			})
+			// })
+			// .catch((err) => {
+			// 	return next(err);
+			// })
 	}
 
 	const getHeroes = async (options) => {
@@ -167,6 +167,7 @@ function Heroes() {
 					.then(async (body) => {
 						let data = body.data;
 						let heros = data.heros;
+						console.log(`TOTAL HEROES : ${heros.length}`)
 						return resolve(heros);
 					})
 					.catch((err) => {

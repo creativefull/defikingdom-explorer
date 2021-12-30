@@ -18,17 +18,23 @@ function Txn() {
         let hash = req.params.hash
         if (!validate_txhash(hash)) {
             return res.render('detailTxn', {
-                title: 'Not Found',
+                title: 'Defi Kingdoms Transaction Hash (Txhash) Detail',
                 data: null
-            })
+            });
         }
-        let data = await TrxModel.findOne({hash: hash})
 
-        if (data) {
-            data = data.toJSON()
-            data.fee = (data.gas * parseInt(data.gasPrice)) / 10 ** 18;
-        } else {
-            try {
+        if (hash=='404') {
+            return res.render('detailTxn', {
+                title: 'Defi Kingdoms Transaction Hash (Txhash) Detail',
+                data: null
+            });
+        }
+        
+        try {
+            let data = await TrxModel.findOne({hash: hash});
+            if (data) {
+                data.fee = (data.gas * parseInt(data.gasPrice)) / 10 ** 18;
+            } else {
                 trxData = await swapLib.parseTrx(hash)
                 data = trxData.filter((t) => t != null)
                 if (data.length > 0) {
@@ -39,45 +45,45 @@ function Txn() {
                         data: null
                     })
                 }
-            } catch (e) {
-                console.error(e)
-                return res.render('detailTxn', {
-                    title: 'Not Found',
-                    data: null
-                })
             }
+
+            if (data) {
+                data.fee = (data.gas * parseInt(data.gasPrice)) / 10 ** 18;
+                /* CHECK ADDRESS FROM / TO */
+                abis.map((t) => t.address = t.address.toLowerCase())
+                let checkFrom = _.findWhere(abis, {address: data.from.toLowerCase()})
+                let checkTo = _.findWhere(abis, {address: data.to.toLowerCase()})
+
+                if (checkFrom) {
+                    data.fromTag = checkFrom.type
+                }
+                if (checkTo) {
+                    data.toTag = checkTo.type
+                }
+
+                /* PARSING TIME */
+                data.timestamp = moment.unix(data.timestamp).fromNow() + ' ( ' + moment.unix(data.timestamp).format('MM/DD/YYYY HH:mm:ss A') + ' )'
+
+                /* CEK IF QUEST TRANSACTIONS */
+                if (data.actionName?.toLowerCase() == 'quest' && data.method?.toLowerCase() == 'completequest') {
+                    let dataQuest = await completeQuest(hash)
+                    data.dataQuest = dataQuest
+                    // console.log(data)
+                }
+            }
+
+            // console.log(data)
+            return res.render('detailTxn', {
+                title: 'Defi Kingdoms Transaction Hash (Txhash) Detail',
+                data: data
+            });
+        } catch (err) {
+            console.log('[ERROR] ', err);
+            return res.render('detailTxn', {
+                title: 'Defi Kingdoms Transaction Hash (Txhash) Detail',
+                data: null
+            });
         }
-
-        if (data) {
-            data.fee = (data.gas * parseInt(data.gasPrice)) / 10 ** 18;
-            /* CHECK ADDRESS FROM / TO */
-            abis.map((t) => t.address = t.address.toLowerCase())
-            let checkFrom = _.findWhere(abis, {address: data.from.toLowerCase()})
-            let checkTo = _.findWhere(abis, {address: data.to.toLowerCase()})
-
-            if (checkFrom) {
-                data.fromTag = checkFrom.type
-            }
-            if (checkTo) {
-                data.toTag = checkTo.type
-            }
-
-            /* PARSING TIME */
-            data.timestamp = moment.unix(data.timestamp).fromNow() + ' ( ' + moment.unix(data.timestamp).format('MM/DD/YYYY HH:mm:ss A') + ' )'
-
-            /* CEK IF QUEST TRANSACTIONS */
-            if (data.actionName?.toLowerCase() == 'quest' && data.method?.toLowerCase() == 'completequest') {
-                let dataQuest = await completeQuest(hash)
-                data.dataQuest = dataQuest
-                // console.log(data)
-            }
-        }
-
-        // console.log(data)
-        return res.render('detailTxn', {
-            title: 'Defi Kingdoms Transaction Hash (Txhash) Detail',
-            data: data
-        })
     }
 }
 module.exports = exports = Txn;

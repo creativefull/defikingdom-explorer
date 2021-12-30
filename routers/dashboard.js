@@ -60,6 +60,34 @@ function Dashboard() {
         })
     }
 
+    this.searchTxn = async (req, res, next) => {
+        const body = req.query;
+        let key = body.search;
+        let f = body.f;
+        console.log('[BODY] ', body);
+        let trxData = await TrxModel.findOne({
+            $or : [{
+                hash : key
+            },{
+                from : key
+            },{
+                to : key
+            }]
+        });
+        if (trxData) {
+            return res.redirect(`/tx/${trxData.hash}`);
+        } else {
+            return res.redirect(`/tx/404`);
+        }
+    }
+
+    this.notFound = async (req, res, next) => {
+        return res.render('not-found',{
+            statusCode : req.params.statusCode,
+            title : 'Result'
+        });
+    }
+
     this.jewelStats = async (req,res,next) => {
         let data = await CoinGeckoClient.coins.fetchMarketChart('defi-kingdoms', {})
         let jewelPrice = await nativePrice()
