@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@harmony-js/account": "^0.1.57",
+    "abi-decoder": "^2.4.0",
     "async": "^3.2.2",
     "body-parser": "^1.19.1",
     "coingecko-api": "^1.0.10",

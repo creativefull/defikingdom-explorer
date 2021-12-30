@@ -7,6 +7,7 @@ const TransactionHandler= require('./Transaction'), Transaction = new Transactio
 const TxnHandler = require('./txn'), Txn = new TxnHandler()
 const TokenHandler = require('./token'), Token = new TokenHandler()
 const HeroesHandler = require('./heroes'), Heroes = new HeroesHandler();
+const TavernHandler = require('./tavern'), Tavern = new TavernHandler();
 
 app.get('/', Dashboard.index)
 app.get('/jewel-stats', Dashboard.jewelStats);
@@ -32,4 +33,6 @@ app.get('/hero/list', Heroes.index);
 app.get('/hero/list/dataTable', Heroes.dataTable);
 app.get('/hero/:heroID', Heroes.heroDetail);
 
+app.get('/tavern', Tavern.index)
+app.get('/tavern/list/datatable', Tavern.dataTable)
 module.exports = exports = app

@@ -20,7 +20,7 @@ function Dashboard() {
         let outputs = trxData.map((trx) => {
             trx.timestamp = moment.unix(trx.timestamp).fromNow()
             let amount = 0
-            trx.tokenTransfers.forEach((t) => {
+            trx.tokenTransfers?.forEach((t) => {
                 if (t.symbol == 'JEWEL') {
                     amount += t.amount
                 }

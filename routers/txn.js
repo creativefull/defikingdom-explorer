@@ -5,10 +5,24 @@ const swapLib = require('../miners/swap')
 const moment = require('moment')
 const _ = require('underscore')
 const {abis} = require('../miners/abis')
+const {
+    completeQuest
+} = require('../lib/quest')
+function validate_txhash(addr)
+{
+  return /^0x([A-Fa-f0-9]{64})$/.test(addr);
+}
 
 function Txn() {
     this.detail = async (req,res,next) => {
         let hash = req.params.hash
+        if (!validate_txhash(hash)) {
+            return res.render('detailTxn', {
+                title: 'Defi Kingdoms Transaction Hash (Txhash) Detail',
+                data: null
+            });
+        }
+
         if (hash=='404') {
             return res.render('detailTxn', {
                 title: 'Defi Kingdoms Transaction Hash (Txhash) Detail',
@@ -49,6 +63,13 @@ function Txn() {
 
                 /* PARSING TIME */
                 data.timestamp = moment.unix(data.timestamp).fromNow() + ' ( ' + moment.unix(data.timestamp).format('MM/DD/YYYY HH:mm:ss A') + ' )'
+
+                /* CEK IF QUEST TRANSACTIONS */
+                if (data.actionName?.toLowerCase() == 'quest' && data.method?.toLowerCase() == 'completequest') {
+                    let dataQuest = await completeQuest(hash)
+                    data.dataQuest = dataQuest
+                    // console.log(data)
+                }
             }
 
             // console.log(data)
