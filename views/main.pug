@@ -1,4 +1,21 @@
 extends layout
+block style
+    style.
+        .jqstooltip { 
+            font-size: 11px !important; 
+            padding-bottom: 12px !important;
+            color: black !important; 
+            overflow: auto !important; 
+            text-align: center !important;  
+            border-color: #CCCCCC !important; 
+            max-width: 400px !important; 
+            max-height: 400px !important; 
+        }
+
+        .jqsfield { 
+            font-size: 12px !important; 
+            color: #fff !important; /*set the text color here */
+        }
 block middleContent
     section.bg-dark(style="background-image: url('https://defikingdoms.com/img/defi-kingdoms-bg.png'); height: 291px;")
         .container.space-top-2.space-bottom-3
@@ -56,8 +73,8 @@ block content
                                 a.text-size-1(href="#" rel="tooltip" data-toggle="tooltip" data-placement="bottom" title data-original-title="View Historical JEWEL Price")#jewel-volume
                         hr.hr-space-lg
 
-                    .col-md-6.col-lg-4.u-ver-divider.u-ver-divider--left.u-ver-divider--none-md
-                        p.text-muted Grafik
+                    .col-md-6.col-lg-4.u-ver-divider.u-ver-divider--left.u-ver-divider--none-md#cartVolume(style = 'display : none;')
+                        p.text-muted Volumes
                         div(class = 'pull-in sparkline-fix')
                             div#lineChart
                         
@@ -150,6 +167,7 @@ block script
                 success: (data) => {
                     console.log(data)
                     if (data.code == 200) {
+                        let total_volumes = data.data.total_volumes;
                         let lastPrice = parseFloat(data.finalPrice).toFixed(2)
                         let lastVolumes = parseFloat(data.data.total_volumes[0][1]).toFixed(2)
                         let lastCap = parseFloat(data.data.market_caps[0][1]).toFixed(2)
@@ -158,17 +176,26 @@ block script
                         $("#jewel-price").text(`$ ${lastPrice}`)
                         $("#jewel-volume").text(Number(lastVolumes).toLocaleString())
                         $("#jewel-cap").text(`$ ${Number(lastCap).toLocaleString()}`)
-                        $("#harmony-block").text(latestBlock)
+                        $("#harmony-block").text(latestBlock);
+
+                        let listVol = [];
+                        total_volumes.forEach((x) => {
+                            let value = x[1];
+                            listVol.push(parseFloat(value).toFixed(2));
+                        });
+                        console.log('[VOL] ', listVol);
+                        //- $('#lineChart').sparkline([105,103,123,100,95,105,115], {
+                        $('#cartVolume').show();
+                        $('#lineChart').sparkline(listVol, {
+                            type: 'line',
+                            height: '100',
+                            width: '100%',
+                            lineWidth: '1',
+                            lineColor: '#ffa534',
+                            fillColor: 'rgba(255, 165, 52, .14)'
+                        });
                     }
                 }
             });
 
-            $('#lineChart').sparkline([105,103,123,100,95,105,115], {
-                type: 'line',
-                height: '100',
-                width: '100%',
-                lineWidth: '1',
-                lineColor: '#ffa534',
-                fillColor: 'rgba(255, 165, 52, .14)'
-            });
         })

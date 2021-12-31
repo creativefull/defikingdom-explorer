@@ -95,7 +95,7 @@ function Dashboard() {
         data.finalPrice = jewelPrice
         data.block = block
 
-        return res.json(data)
+        return res.json(data);
     }
 }
 module.exports = exports = Dashboard
