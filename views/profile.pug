@@ -71,7 +71,7 @@ block content
 						div(class = 'row align-items-center' style = 'display : none;')#fieldToken
 							div(class = 'col-md-4 mb-1 mb-md-0') Token:
 							div.col-md-8 
-								span.small(tyle = 'position:relative;top:-1px')#listContractToken 
+								div.small(tyle = 'position:relative;top:-1px') 
 									div.dropdown
 										input#inputToken(class = 'dropbtn form-control form-control-sm' onClick = 'showToken()')
 										div(id="myListToken" class="dropdown-content")
@@ -178,6 +178,22 @@ block script
 		$(function (){
 			$('.nameMethod').tooltip();
 
+			$(document).mouseup(function(e) {
+				var containerToken = $("#inputToken");
+				var containerList = $("#myListToken");
+
+				console.log('[CONTAINER TOKEN] 1', containerToken.is(e.target) );
+				console.log('[CONTAINER TOKEN] 2', containerToken.has(e.target).length)
+				console.log('[CONTAINER LIST] ', containerList.is(e.target));
+
+				if (!containerToken.is(e.target) && containerToken.has(e.target).length === 0) {
+					console.log('[HIDE]');
+					$('#myListToken').hide();
+				} else {
+					$('#myListToken').show();
+				}
+			});
+
 			$.ajax({
 				url: `/address/${address}/stats`,
 				beforeSend: () => {
@@ -254,8 +270,6 @@ block script
 						if (jmlToken >= 4) {
 							$('#myListToken').css('height', '350px');
 						}
-						//- $('input#inputToken').val(`Token (${jmlToken}) $${parseFloat(balanceUsd).toFixed(2)}`);
-						//- $('#listContractToken').html(listContractToken);	
 					}
 				}
 			});
