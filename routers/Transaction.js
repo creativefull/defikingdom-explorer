@@ -6,6 +6,21 @@ const _ = require('underscore')
 const {abis} = require('../miners/abis');
 let abiQuest = require('../abi/quest.json');
 const InputDataDecoder = require('ethereum-input-data-decoder');
+const abiDecoder = require('abi-decoder');
+const { completeQuest } = require('../lib/quest')
+const questIdName = [{
+	name: 'FORAGING',
+	address: '0x3132c76acf2217646fb8391918d28a16bd8a8ef4'
+}, {
+	name: 'MINING',
+	address: '0x569e6a4c2e3af31b337be00657b4c040c828dd73'
+}, {
+	name: 'FISHING',
+	address: '0xe259e8386d38467f0e7ffedb69c3c9c935dfaefc'
+}, {
+	name: 'GARDENING',
+	address: '0xe4154b6e5d240507f9699c730a496790a722df19'
+}]
 
 function Transaction () {
 
@@ -161,7 +176,7 @@ function Transaction () {
 						`,
 						to : `
 							<a href = '#' class='hash-tag hash-tag--sm text-truncate'>${x.to}</a>
-							${x.method=='startQuest'?elmActionName:''}
+							${['startQuest', 'startQuestWithData'].indexOf(x.method) >= 0 ?elmActionName:''}
 						`,
 						value : `${parseFloat(amount).toFixed(2)} JEWEL`,
 						txn_fee : `<small class='small text-secondary'>${parseFloat(txn_fee).toFixed(5)}</small>`
@@ -193,16 +208,14 @@ function Transaction () {
 		return new Promise(async (resovle, reject) => {
 			let output = questData.map((x) => {
 				let decoder = new InputDataDecoder(abiQuest);
-				if (x.method == 'startQuest') {
+
+				if (['startQuest', 'startQuestWithData'].indexOf(x.method) >= 0) {
 					let result = decoder.decodeData(x.input);
 					let questId = '0x' + result.inputs[1]
+					let questName = _.findWhere(questIdName, {address: questId.toLowerCase()})
 
-					if (questId.toLowerCase() == '0x3132c76acf2217646fb8391918d28a16bd8a8ef4') {
-						x.questName = 'FORAGING'
-					} else if (questId.toLowerCase() == '0xe259e8386d38467f0e7ffedb69c3c9c935dfaefc') {
-						x.questName = 'FISHING'
-					} else if (questId.toLowerCase() == '0x569e6a4c2e3af31b337be00657b4c040c828dd73') {
-						x.questName = 'MINING'
+					if (questName) {
+						x.questName = questName.name
 					} else {
 						x.questName = 'UNKNOWN'
 					}

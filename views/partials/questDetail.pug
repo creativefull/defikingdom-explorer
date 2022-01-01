@@ -1,28 +1,76 @@
 .row.p-3.txn-quest-log.txn-row
     .col-md-3.mb-2
         small Logs
-    .col-md-9
-        table.table-bordered.table
-            tr
-                td(style="width: 10%") HeroID
-                td(style="width: 10%") Stamina Spent
-                td Reward
-            each heroes in data.dataQuest.QuestCompleted
-                - let hero = heroes.data.filter((d) => d.name == 'heroId')
+    if (['startQuest','startQuestWithData'].indexOf(data.method) >= 0)
+        small= JSON.stringify(data.questData)
+        .col-md-9
+            .table-responsive
+                table.table-bordered.table
+                    tr
+                        td(style="width: 10%") Heroes
+                        td(style="width: 10%") Player
+                        td Profession
+                        td Start Time
+                        td End Time
+                        td Status
+                    each quest in data.dataQuest.data
+                        tr
+                            td
+                                span= quest.hero
+                            td
+                                small.text-truncate= quest.player
+                            td
+                                small.text-muted= quest.quest.name
+                            td
+                                small.text-muted= quest.startTime
+                            td
+                                small.text-muted= quest.completeAtTime
+                            td
+                                if quest.status == 1
+                                    span.text-warning= 'On Quest'
+                                else if quest.status == 2
+                                    span.text-success = 'Complete'
+
+    else if data.method == 'completeQuest'
+        .col-md-9
+            table.table-bordered.table
+                tr
+                    td(style="width: 10%") HeroID
+                    td(style="width: 10%") Stamina Spent
+                    td(style="width: 20%") Reward
+                    td XP
+                each heroes in data.dataQuest.QuestCompleted
+                    - let hero = heroes.data.filter((d) => d.name == 'heroId')
+                    tr
+                        td
+                            span= hero[0].value
+                        td
+                            each stamina in data.dataQuest.QuestStaminaSpent
+                                - let stamHero = stamina.data[2].value
+                                - let stam = stamina.data[4].value
+                                if (stamHero == hero[0].value)
+                                    span= stam + " Stamina"
+                        td
+                            each rewards in data.dataQuest.QuestReward
+                                - let rewardHero = rewards.data[2].value
+                                - let reward = rewards.data[4].value
+                                - let symbol = rewards.data[3].value
+                                if (rewardHero == hero[0].value)
+                                    small= reward + ' ' + symbol
+                                    br
+                        td
+                            each xp in data.dataQuest.QuestXP
+                                - let xpHero = xp.data[2].value
+                                - let xpReward = xp.data[3].value
+                                if (xpHero == hero[0].value)
+                                    small= xpReward + ' Xp'
+                                    br
                 tr
                     td
-                        span= hero[0].value
+                        span Profession
                     td
-                        each stamina in data.dataQuest.QuestStaminaSpent
-                            - let stamHero = stamina.data[2].value
-                            - let stam = stamina.data[4].value
-                            if (stamHero == hero[0].value)
-                                span= stam + " Stamina"
+                        span.text-warning= data.dataQuest.QuestDetail.questName
                     td
-                        each rewards in data.dataQuest.QuestReward
-                            - let rewardHero = rewards.data[2].value
-                            - let reward = rewards.data[4].value
-                            - let symbol = rewards.data[3].value
-                            if (rewardHero == hero[0].value)
-                                small= reward + ' ' + symbol
-                                br
+                        span Player
+                    td
+                        span.text-muted= data.dataQuest.QuestDetail.player.name

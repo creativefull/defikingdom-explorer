@@ -6,7 +6,7 @@ const moment = require('moment')
 const _ = require('underscore')
 const {abis} = require('../miners/abis')
 const {
-    completeQuest
+    completeQuest, startQuest
 } = require('../lib/quest')
 function validate_txhash(addr)
 {
@@ -33,6 +33,7 @@ function Txn() {
         try {
             let data = await TrxModel.findOne({hash: hash});
             if (data) {
+                data = data.toJSON()
                 data.fee = (data.gas * parseInt(data.gasPrice)) / 10 ** 18;
             } else {
                 trxData = await swapLib.parseTrx(hash)
@@ -64,11 +65,17 @@ function Txn() {
                 /* PARSING TIME */
                 data.timestamp = moment.unix(data.timestamp).fromNow() + ' ( ' + moment.unix(data.timestamp).format('MM/DD/YYYY HH:mm:ss A') + ' )'
 
-                /* CEK IF QUEST TRANSACTIONS */
-                if (data.actionName?.toLowerCase() == 'quest' && data.method?.toLowerCase() == 'completequest') {
-                    let dataQuest = await completeQuest(hash)
-                    data.dataQuest = dataQuest
-                    // console.log(data)
+                /* CEK IF WATCHED TRANSACTIONS */
+                if (data.actionName?.toLowerCase() == 'quest') {
+                    if (['startquestwithdata', 'startquest'].indexOf(data.method?.toLowerCase()) >= 0) {
+                        let dataQuest = await startQuest(hash)
+                        data.dataQuest = dataQuest
+                    }
+
+                    if (data.method?.toLowerCase() == 'completequest') {
+                        let dataQuest = await completeQuest(hash)
+                        data.dataQuest = dataQuest
+                    }
                 }
             }
 
