@@ -198,9 +198,11 @@ function Transaction () {
 					let questId = '0x' + result.inputs[1]
 
 					if (questId.toLowerCase() == '0x3132c76acf2217646fb8391918d28a16bd8a8ef4') {
-						x.questName = 'FOREGING'
+						x.questName = 'FORAGING'
 					} else if (questId.toLowerCase() == '0xe259e8386d38467f0e7ffedb69c3c9c935dfaefc') {
 						x.questName = 'FISHING'
+					} else if (questId.toLowerCase() == '0x569e6a4c2e3af31b337be00657b4c040c828dd73') {
+						x.questName = 'MINING'
 					} else {
 						x.questName = 'UNKNOWN'
 					}
