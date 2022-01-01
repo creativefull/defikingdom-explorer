@@ -18,6 +18,7 @@ app.get('/search', Dashboard.searchTxn);
 app.get('/tx/:hash', Txn.detail)
 
 app.get('/token/list', Token.list);
+app.get('/token/list/datatable', Token.dataTable);
 
 app.get('/trx', Transaction.index);
 app.get('/trx/dataTable', Transaction.dataTable);

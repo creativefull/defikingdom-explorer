@@ -1,35 +1,51 @@
 extends layout
 block content
-    .container
-        .row
-            .col-md-12
-                .card
-                    .card-header
-                        .card-title List Token Defi Kingdoms
-                    .card-body(style="padding: 0px")
-                        .table-responsive
-                            table.table.table-striped.table-bordered
-                                tbody
-                                    each d in data
-                                        tr
-                                            td
-                                                .row.mb-2
-                                                    .col-md-1.col-sm-1.pt-2
-                                                        .avatar
-                                                            span.avatar-title.rounded-circle(style="background-color: transparent;")
-                                                                img(src=d.logoURI, alt=d.symbol width="32px")
-                                                    .col-md-2.col-sm-2.pt-2
-                                                        div
-                                                            span= d.name
-                                                        div
-                                                            span.text-muted= d.symbol
-                                                    .col-md-5.col-sm-5.pt-2
-                                                        div
-                                                            small
-                                                                a(href="#")= d.address 
-                                                    .col-md-2.col-sm-2.pt-2.text-right
-                                                        div
-                                                            b= parseFloat(d.jewelPrice).toFixed(2) + ' Jewel'
-                                                    .col-md-2.col-sm-2.pt-2.text-right
-                                                        div
-                                                            b= '$ ' + d.usdPrice
+	main#content
+		.container
+			.d-md-flex.justify-content-between.align-items-center.py-3
+				.mb-1.mb-md-0
+					h1.h4.mb-0 List Token Defi Kingdoms
+			.row
+				.col-md-12.col-xs-12.col-sm-12
+					.card
+						.card-body(style="padding: 5px")
+							.table-responsive
+								table.table.table-hover.display#tableTokens(width="100%" cellspacing="0")
+									thead.thead-light
+										tr
+											th #
+											th Name
+											th Address
+											th Balance
+											th Price USD
+									tbody
+
+
+block script
+	script.
+		var tableTokens;
+		$(function (){
+			tableTokens = $('#tableTokens').DataTable({
+				serverSide: false,
+				"pageLength":  50,
+				searching : false,
+				"autoWidth" : true,
+				fixedColumns: true,
+				ajax : `/token/list/dataTable`,
+				responsive: true,
+				lengthChange: false,
+				columns : [
+					{
+						"data" : "avatar",
+					},{
+						"data" : "name",
+					},{
+						"data" : "addressToken",
+					},{
+						"data" : "jewelPrice",
+					},{
+						"data" : "usdPrice",
+					}
+				],
+			});
+		});

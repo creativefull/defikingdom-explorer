@@ -1,8 +1,6 @@
 const abiQuest = require('../abi/quest.json')
 
 const moment = require('moment');
-const InputDataDecoder = require('ethereum-input-data-decoder');
-
 function Heroes() {
 	this.index = (req,res,next) => {
 		return res.render('hero', {
@@ -11,9 +9,9 @@ function Heroes() {
 	}
 
 	this.dataTable = async (req, res, next) => {
+		const query = req.query;
 		getHeroes()
 			.then(async (heros) => {
-				let decoder = new InputDataDecoder(abiQuest);
 				let output = heros.map((x) => {
 					if (x.currentQuest.toLowerCase() == '0x3132c76acf2217646fb8391918d28a16bd8a8ef4') {
 						x.questName = `
@@ -138,7 +136,11 @@ function Heroes() {
 				options = options||"";
 				let query = `
 					query {
-						heros(where : {${options}}) {
+						heros(
+							where: {
+                                saleAuction_not: null
+                            }
+						) {
 							id
 							numberId
 							profession
