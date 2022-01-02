@@ -11,15 +11,27 @@ const moment = require('moment');
 const _ = require('underscore');
 const request = require('request');
 const { nativePrice } = require('../lib/getPrice');
-const TrxModel = require('../models/transaksi')
+const TrxModel = require('../models/transaksi');
+
+const tokenJewel = '0x72Cb10C6bfA5624dD07Ef608027E366bd690048F'.toLowerCase();
 
 function Profile () {
 
 	this.address = async (req, res, next) => {
 		let address = req.params.address;
+		let tokenContract = new web3.eth.Contract(erc20Abi, tokenJewel);
+		let balance = await tokenContract.methods.lockOf(address).call(); // get balance token
+		balance = parseFloat((balance)/ 10 ** 18).toFixed(2);
+		let jewelUSDPrice = await nativePrice();
+		let usdPriceLock = parseFloat(jewelUSDPrice * balance).toFixed(2);
+		
+		// console.log('[BALANCE] ', balance);
+		// console.log('[USD BALANCE] ', usdPriceLock);
 		return res.render('profile',{
 			title : `Defi Kingdoms - Address ${address}`,
 			address : address,
+			balanceLock : balance,
+			usdPriceLock : usdPriceLock,
 		})
 	}
 
@@ -27,10 +39,8 @@ function Profile () {
 		let address = req.params.address;
 		
 		let uniswapContract = new web3.eth.Contract(uniswapAbi, '0x24ad62502d1c652cc7684081169d04896ac20f30')
-		let tokenJewel = '0x72Cb10C6bfA5624dD07Ef608027E366bd690048F'.toLowerCase();
 		let jewelUSDPrice = await nativePrice()
 
-		// await getPriceToken(address);
 		async.parallel({
 			tokens : function (callback) {
 				getPriceToken(address, tokenJewel, jewelUSDPrice, uniswapContract)
