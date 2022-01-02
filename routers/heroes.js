@@ -34,7 +34,7 @@ function Heroes() {
 					return {
 						...x,
 						id : `
-							<a href = '/hero/${x.id}' class='hash-tag hash-tag--sm text-truncate' target = '__blank'>
+							<a href = 'https://kingdom.watch/hero/${x.id}' class='hash-tag hash-tag--sm text-truncate' target = '__blank'>
 								${x.id}
 							</a>
 						`,
