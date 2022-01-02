@@ -282,7 +282,7 @@ function Profile () {
 			try {
 				let query = `
 					query {
-						heros(where : { owner : "${address.toLowerCase()}"}) {
+						heros(where : { owner : "${address}"}) {
 							id
 							numberId
 							profession

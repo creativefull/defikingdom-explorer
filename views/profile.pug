@@ -182,12 +182,12 @@ block script
 				var containerToken = $("#inputToken");
 				var containerList = $("#myListToken");
 
-				console.log('[CONTAINER TOKEN] 1', containerToken.is(e.target) );
-				console.log('[CONTAINER TOKEN] 2', containerToken.has(e.target).length)
-				console.log('[CONTAINER LIST] ', containerList.is(e.target));
+				//- console.log('[CONTAINER TOKEN] 1', containerToken.is(e.target) );
+				//- console.log('[CONTAINER TOKEN] 2', containerToken.has(e.target).length)
+				//- console.log('[CONTAINER LIST] ', containerList.is(e.target));
 
 				if (!containerToken.is(e.target) && containerToken.has(e.target).length === 0) {
-					console.log('[HIDE]');
+					//- console.log('[HIDE]');
 					$('#myListToken').hide();
 				} else {
 					$('#myListToken').show();
