@@ -11,6 +11,7 @@ const moment = require('moment');
 const _ = require('underscore');
 const request = require('request');
 const { nativePrice } = require('../lib/getPrice');
+const { getProfile } = require('../lib/profile');
 const TrxModel = require('../models/transaksi');
 
 const tokenJewel = '0x72Cb10C6bfA5624dD07Ef608027E366bd690048F'.toLowerCase();
@@ -25,12 +26,14 @@ function Profile () {
 		let jewelUSDPrice = await nativePrice();
 		let usdPriceLock = parseFloat(jewelUSDPrice * balance).toFixed(2);
 		
-		// console.log('[BALANCE] ', balance);
+		let profile = await getProfile(address);
+		// console.log('[PROFILE] ', profile);
 		// console.log('[USD BALANCE] ', usdPriceLock);
 		return res.render('profile',{
 			title : `Defi Kingdoms - Address ${address}`,
 			address : address,
 			balanceLock : balance,
+			profile_name : profile&&profile.name?profile.name:'-',
 			usdPriceLock : usdPriceLock,
 		})
 	}
@@ -199,7 +202,7 @@ function Profile () {
 					return {
 						...x,
 						id : `
-							<a href = '/hero/${x.id}' class='hash-tag hash-tag--sm text-truncate' target = '__blank'>
+							<a href = 'https://kingdom.watch/hero/${x.id}' class='hash-tag hash-tag--sm text-truncate' target = '__blank'>
 								${x.id}
 							</a>
 						`,
@@ -292,7 +295,7 @@ function Profile () {
 			try {
 				let query = `
 					query {
-						heros(where : { owner : "${address}"}) {
+						heros(where : { owner : "${address.toLowerCase()}"}) {
 							id
 							numberId
 							profession

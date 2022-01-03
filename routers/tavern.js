@@ -43,7 +43,7 @@ function Tavern() {
 					return {
 						...x,
 						heroId : `
-							<a href = '/hero/${x.id}' class='hash-tag hash-tag--sm text-truncate'>
+							<a href = 'https://kingdom.watch/hero/${x.id}' target = '__blank' class='hash-tag hash-tag--sm text-truncate'>
 								${x.id}
 							</a>
 						`,
